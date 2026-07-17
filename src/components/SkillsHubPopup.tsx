@@ -20,7 +20,7 @@ export default function SkillsHubPopup() {
             Abrir en Popup
           </button>
           <a
-            href="https://yvapiyrswankg.kimi.page/"
+            href="https://rr-skills-hub.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-primary flex-1 text-center"
@@ -41,7 +41,7 @@ export default function SkillsHubPopup() {
               </div>
               <div className="flex items-center gap-2">
                 <a
-                  href="https://yvapiyrswankg.kimi.page/"
+                  href="https://rr-skills-hub.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs px-3 py-1 rounded"
@@ -59,7 +59,7 @@ export default function SkillsHubPopup() {
               </div>
             </div>
             <iframe
-              src="https://yvapiyrswankg.kimi.page/"
+              src="https://rr-skills-hub.vercel.app/"
               className="flex-1 w-full"
               style={{border:"none"}}
               title="RR Skills Hub"

@@ -119,7 +119,7 @@ export default function Home() {
                   <ExternalAppWidget title="Altruismo" url="https://altruismo-web.vercel.app/es" icon="🤝" />
                 </div>
                 <div id="skills-hub-app">
-                  <ExternalAppWidget title="RR Skills Hub" url="https://yvapiyrswankg.kimi.page/" icon="📚" />
+                  <ExternalAppWidget title="RR Skills Hub" url="https://rr-skills-hub.vercel.app/" icon="📚" />
                 </div>
                 <div id="adquisicion">
                   <ExternalAppWidget title="Dashboard de Adquisición" url="https://3mpm6kcgvmpz4.kimi.page/#panel" icon="📈" />
