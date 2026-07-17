@@ -45,7 +45,10 @@ next-env.d.ts
 /public/reports/Reporte_*.pdf
 /public/reports/Reporte_*.xlsx
 /public/reports/*.png
-/public/optimizacion/
+/public/optimizacion/*.pdf
+/public/optimizacion/*.xlsx
+/public/optimizacion/*.png
+!/public/optimizacion/reports_index.json
 
 .vercel
 .env*
