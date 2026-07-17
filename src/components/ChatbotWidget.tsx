@@ -217,7 +217,7 @@ export default function ChatbotWidget() {
             disabled={loading}
           />
           <button
-            onClick={sendMessage}
+            onClick={() => { void sendMessage(); }}
             disabled={loading || !input.trim()}
             className="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
             style={{
