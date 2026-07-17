@@ -1,47 +1,55 @@
-# Sync reportes PDF/XLSX/JSON desde MiroFish-Lite hacia Mega Dashboard
+# Valida los artefactos de reportes ya sincronizados por los generadores MiroFish.
 # Uso: .\scripts\sync_reports.ps1
-# Cron sugerido (Task Scheduler): diario 06:00 y 18:00 tras MiroFish
-#   Program: powershell.exe
-#   Args: -NoProfile -ExecutionPolicy Bypass -File "G:\Mi unidad\RR_Aliados\skill-orchestrator-dashboard\scripts\sync_reports.ps1"
-# Luego: vercel deploy --prod --yes (o CI)
+# Los scripts enhanced_report.py y reporte_optimizacion_estrategica.py escriben
+# directamente en public/.
 
 $ErrorActionPreference = "Stop"
 
 $DashboardRoot = Split-Path -Parent $PSScriptRoot
-$MiroFishReports = "G:\Mi unidad\RR_Aliados\05_IA_Herramientas\mirofish_lite\output\reports"
-$MiroFishOptim = "G:\Mi unidad\RR_Aliados\05_IA_Herramientas\mirofish_lite\output\optimizacion"
 $PublicReports = Join-Path $DashboardRoot "public\reports"
-$PublicOptim = Join-Path $DashboardRoot "public\optimizacion"
 
-function Sync-Folder {
-    param([string]$Source, [string]$Dest, [string]$Label)
-    if (-not (Test-Path -LiteralPath $Source)) {
-        Write-Warning "Origen no encontrado ($Label): $Source"
-        return 0
+function Test-ReportIndex {
+    param([string]$IndexPath, [string]$Root, [string]$Label)
+
+    if (-not (Test-Path -LiteralPath $IndexPath)) {
+        throw "[$Label] Índice no encontrado: $IndexPath"
     }
-    if (-not (Test-Path -LiteralPath $Dest)) {
-        New-Item -ItemType Directory -Path $Dest -Force | Out-Null
+    $index = Get-Content -LiteralPath $IndexPath -Raw | ConvertFrom-Json
+    $entries = @($index.reports)
+    if ($entries.Count -eq 0) {
+        throw "[$Label] El índice no tiene reportes."
     }
-    $files = Get-ChildItem -LiteralPath $Source -Recurse -File -ErrorAction SilentlyContinue |
-        Where-Object { $_.Extension -in '.pdf', '.xlsx', '.json' }
-    $count = 0
-    foreach ($f in $files) {
-        $destPath = Join-Path $Dest $f.Name
-        Copy-Item -LiteralPath $f.FullName -Destination $destPath -Force
-        $count++
+    foreach ($entry in $entries) {
+        if (-not $entry.pdf) { continue }
+        $relative = $entry.pdf.TrimStart('/').Replace('/', '\')
+        $artifact = Join-Path (Join-Path $DashboardRoot "public") $relative
+        if (-not (Test-Path -LiteralPath $artifact) -or (Get-Item $artifact).Length -eq 0) {
+            throw "[$Label] Artefacto faltante o vacío: $artifact"
+        }
     }
-    Write-Host "[$Label] $count archivos sincronizados -> $Dest"
-    return $count
+    Write-Host "[$Label] Índice y artefactos válidos." -ForegroundColor Green
 }
 
 Write-Host "=== Sync Reportes Mega Dashboard ===" -ForegroundColor Cyan
 Write-Host "Dashboard: $DashboardRoot"
 Write-Host "Inicio: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
 
-$r1 = Sync-Folder -Source $MiroFishReports -Dest $PublicReports -Label "Predicciones"
-$r2 = Sync-Folder -Source $MiroFishOptim -Dest $PublicOptim -Label "Optimizacion"
+Test-ReportIndex -IndexPath (Join-Path $PublicReports "predicciones_index.json") -Root $PublicReports -Label "Predicciones"
+Test-ReportIndex -IndexPath (Join-Path $PublicReports "estrategicos_index.json") -Root $PublicReports -Label "Estrategia"
+
+$ActionLedger = Join-Path $DashboardRoot "public\data\action_ledger.json"
+if (-not (Test-Path -LiteralPath $ActionLedger)) {
+    throw "[Acciones] Ledger no encontrado: $ActionLedger (reporte_optimizacion_estrategica.py debe publicarlo)"
+}
+$ledger = Get-Content -LiteralPath $ActionLedger -Raw | ConvertFrom-Json
+$actionCount = @($ledger.actions).Count
+if ($actionCount -eq 0) {
+    Write-Warning "[Acciones] action_ledger.json existe pero no tiene acciones."
+} else {
+    Write-Host "[Acciones] Ledger válido: $actionCount acciones (updated_at=$($ledger.updated_at))." -ForegroundColor Green
+}
 
 Write-Host ""
-Write-Host "Total: $($r1 + $r2) archivos." -ForegroundColor Green
+Write-Host "Validación de reportes completada." -ForegroundColor Green
 Write-Host "Salud en prod: GET /api/automation (stale >24h = warning)." -ForegroundColor DarkGray
 Write-Host "Siguiente: vercel deploy --prod --yes" -ForegroundColor Green

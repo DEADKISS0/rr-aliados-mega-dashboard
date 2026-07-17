@@ -31,7 +31,7 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
   const ctx = getBusinessContext();
   const generatedAt = new Date().toISOString();
 
-  const [pred, strat, finance] = await Promise.all([
+  const [pred, strat, finance, actionLedger] = await Promise.all([
     readJsonSafe<{ reports?: Array<{ label?: string; date?: string; summary?: Record<string, unknown> }> }>(
       "reports/predicciones_index.json"
     ),
@@ -39,10 +39,16 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
       "reports/estrategicos_index.json"
     ),
     readJsonSafe<{ updatedAt?: string; notes?: string }>("data/finance_snapshot.json"),
+    readJsonSafe<{ actions?: Array<{ title?: string; status?: string; evidence?: unknown[] }> }>(
+      "data/action_ledger.json"
+    ),
   ]);
 
   const latestPred = pred?.reports?.[0];
   const latestStrat = strat?.reports?.[0];
+  const pendingActions = (actionLedger?.actions ?? []).filter(
+    (action) => action.status !== "CLOSED" && action.status !== "DONE"
+  );
 
   const dealLines = deals
     .map(
@@ -65,7 +71,8 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
     dealLines,
     `ÚLTIMO REPORTE PREDICCIONES: ${latestPred?.label || latestPred?.date || "n/d"} · cambios=${String(latestPred?.summary?.total_changes ?? "n/d")} riesgos=${String(latestPred?.summary?.risks ?? "n/d")}`,
     `ÚLTIMO REPORTE ESTRATÉGICO: ${latestStrat?.label || latestStrat?.date || "n/d"} · progreso=${String(latestStrat?.summary?.progreso ?? "n/d")} acciones=${String(latestStrat?.summary?.acciones ?? "n/d")}`,
-    `REGLAS: Usa solo este contexto para KPIs/deals/runway. Si falta dato, dilo. No inventes clientes cerrados ni MRR. Deals son snapshot interno, no CRM en vivo.`,
+    `ACCIONES ESTRATÉGICAS PENDIENTES SIN EVIDENCIA CRM: ${pendingActions.length}${pendingActions.length ? ` · ${pendingActions.slice(0, 3).map((action) => action.title).join(" | ")}` : ""}`,
+    `REGLAS: Usa solo este contexto para KPIs/deals/runway. Si falta dato, dilo. No inventes clientes cerrados ni MRR. Deals son snapshot interno, no CRM en vivo. Una tarea DONE sin evidencia no cierra una recomendación.`,
   ]
     .filter(Boolean)
     .join("\n");

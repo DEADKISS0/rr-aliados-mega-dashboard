@@ -53,7 +53,6 @@ import ConsultaContextoWidget from "@/components/ConsultaContextoWidget";
 import SkillsCatalogWidget from "@/components/SkillsCatalogWidget";
 import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
 import MiroFishSignalsWidget from "@/components/MiroFishSignalsWidget";
-import OptimizacionWidget from "@/components/OptimizacionWidget";
 import ReportesEstrategicosWidget from "@/components/ReportesEstrategicosWidget";
 import ActionProposalWidget from "@/components/ActionProposalWidget";
 import SalesPipelineWidget from "@/components/SalesPipelineWidget";
@@ -132,14 +131,11 @@ export default function Home() {
             <div className="section-divider" />
 
             {/* Zona 2 — Inteligencia IA */}
-            <SectionHeader number="01" title="Inteligencia IA" subtitle="Predicciones, optimización y acciones verificables" />
-            <div id="mirofish-reports" className="col-4">
+            <SectionHeader number="01" title="Inteligencia IA" subtitle="Predicciones, estrategia y acciones verificables" />
+            <div id="mirofish-reports" className="col-6">
               <MiroFishReportsWidget />
             </div>
-            <div id="optimizacion" className="col-4">
-              <OptimizacionWidget />
-            </div>
-            <div id="estrategia" className="col-4">
+            <div id="estrategia" className="col-6">
               <ReportesEstrategicosWidget />
             </div>
             <div id="action-proposals" className="col-12">
