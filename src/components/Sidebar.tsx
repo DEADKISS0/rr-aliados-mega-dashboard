@@ -9,7 +9,7 @@ interface SidebarProps {
 }
 
 const comando = ["Inicio", "Métricas", "Pipeline", "Finanzas", "Calendario", "Tareas", "Comandos", "Exportar"];
-const reportes = ["MiroFish Reports", "Optimización", "Estrategia"];
+const reportes = ["MiroFish Reports", "Estrategia"];
 const aplicaciones = ["Company Hub", "Cotizador", "Altruismo", "Skills Hub App", "Adquisición", "DashWeb", "Skills Catalog"];
 const dataAnalytics = ["Excel Widget", "Google Maps", "Google News", "Amazon Analyzer", "Metricool"];
 const research = ["Web Research", "Firecrawl", "NotebookLM"];
@@ -65,7 +65,6 @@ const NAV_IDS: Record<string, string> = {
   Comandos: "command-center",
   Exportar: "export-widget",
   "MiroFish Reports": "mirofish-reports",
-  Optimización: "optimizacion",
   Estrategia: "estrategia",
   "Company Hub": "company-hub",
   Cotizador: "cotizador",

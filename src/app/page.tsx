@@ -53,7 +53,6 @@ import ConsultaContextoWidget from "@/components/ConsultaContextoWidget";
 import SkillsCatalogWidget from "@/components/SkillsCatalogWidget";
 import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
 import ReportesEstrategicosWidget from "@/components/ReportesEstrategicosWidget";
-import OptimizacionWidget from "@/components/OptimizacionWidget";
 import SalesPipelineWidget from "@/components/SalesPipelineWidget";
 import FinancialHealthWidget from "@/components/FinancialHealthWidget";
 import ClientStatusWidget from "@/components/ClientStatusWidget";
@@ -96,69 +95,18 @@ export default function Home() {
             <div className="section-divider" />
 
             {/* Zona 2 — Inteligencia IA */}
-            <SectionHeader number="01" title="Inteligencia IA" subtitle="Reportes generados por MiroFish-Lite" />
-            <div id="mirofish-reports" className="col-4">
+            <SectionHeader number="01" title="Inteligencia IA" subtitle="Predicciones y optimización estratégica" />
+            <div id="mirofish-reports" className="col-6">
               <MiroFishReportsWidget />
             </div>
-            <div id="optimizacion" className="col-4">
-              <OptimizacionWidget />
-            </div>
-            <div id="estrategia" className="col-4">
+            <div id="estrategia" className="col-6">
               <ReportesEstrategicosWidget />
             </div>
 
             <div className="section-divider" />
 
-            {/* Zona 3 — Negocio */}
-            <SectionHeader number="02" title="Negocio" subtitle="Pipeline comercial y salud financiera" />
-            <div id="sales-pipeline" className="col-6">
-              <SalesPipelineWidget />
-            </div>
-            <div id="financial-health" className="col-6">
-              <FinancialHealthWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 4 — Operaciones */}
-            <SectionHeader number="03" title="Operaciones" subtitle="Calendario, tareas y exportación" />
-            <div id="calendar-widget" className="col-3">
-              <CalendarWidget />
-            </div>
-            <div id="task-monitor" className="col-3">
-              <TaskMonitorWidget />
-            </div>
-            <div id="command-center" className="col-3">
-              <CommandCenterWidget />
-            </div>
-            <div id="export-widget" className="col-3">
-              <ExportWidget />
-            </div>
-            <div id="automation-health" className="col-12">
-              <AutomationHealthWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 5 — Growth */}
-            <SectionHeader number="04" title="Growth" subtitle="Analytics, clientes y competencia" />
-            <div id="google-analytics" className="col-3">
-              <GoogleAnalyticsWidget />
-            </div>
-            <div id="google-calendar" className="col-3">
-              <GoogleCalendarWidget />
-            </div>
-            <div id="client-status" className="col-3">
-              <ClientStatusWidget />
-            </div>
-            <div id="competitor-intel" className="col-3">
-              <CompetitorWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 6 — Ecosistema */}
-            <SectionHeader number="05" title="Ecosistema" subtitle="Apps corporativas integradas" />
+            {/* Zona 3 — Ecosistema */}
+            <SectionHeader number="02" title="Ecosistema" subtitle="Apps corporativas integradas" />
             <div className="col-12">
               <div className="apps-grid">
                 <div id="company-hub">
@@ -180,6 +128,54 @@ export default function Home() {
                   <ExternalAppWidget title="DashWeb Core" url="https://dashweb-core-frontend-beta.up.railway.app/login" icon="🔧" />
                 </div>
               </div>
+            </div>
+
+            <div className="section-divider" />
+
+            {/* Zona 4 — Negocio */}
+            <SectionHeader number="03" title="Negocio" subtitle="Pipeline comercial y salud financiera" />
+            <div id="sales-pipeline" className="col-6">
+              <SalesPipelineWidget />
+            </div>
+            <div id="financial-health" className="col-6">
+              <FinancialHealthWidget />
+            </div>
+
+            <div className="section-divider" />
+
+            {/* Zona 5 — Operaciones */}
+            <SectionHeader number="04" title="Operaciones" subtitle="Calendario, tareas y exportación" />
+            <div id="calendar-widget" className="col-3">
+              <CalendarWidget />
+            </div>
+            <div id="task-monitor" className="col-3">
+              <TaskMonitorWidget />
+            </div>
+            <div id="command-center" className="col-3">
+              <CommandCenterWidget />
+            </div>
+            <div id="export-widget" className="col-3">
+              <ExportWidget />
+            </div>
+            <div id="automation-health" className="col-12">
+              <AutomationHealthWidget />
+            </div>
+
+            <div className="section-divider" />
+
+            {/* Zona 6 — Growth */}
+            <SectionHeader number="05" title="Growth" subtitle="Analytics, clientes y competencia" />
+            <div id="google-analytics" className="col-3">
+              <GoogleAnalyticsWidget />
+            </div>
+            <div id="google-calendar" className="col-3">
+              <GoogleCalendarWidget />
+            </div>
+            <div id="client-status" className="col-3">
+              <ClientStatusWidget />
+            </div>
+            <div id="competitor-intel" className="col-3">
+              <CompetitorWidget />
             </div>
 
             <div className="section-divider" />

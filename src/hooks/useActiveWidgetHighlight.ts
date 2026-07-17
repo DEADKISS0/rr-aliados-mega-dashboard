@@ -11,7 +11,6 @@ const NAV_TO_ID: Record<string, string> = {
   Comandos: "command-center",
   Exportar: "export-widget",
   "MiroFish Reports": "mirofish-reports",
-  Optimización: "optimizacion",
   Estrategia: "estrategia",
   "Company Hub": "company-hub",
   Cotizador: "cotizador",

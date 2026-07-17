@@ -18,12 +18,6 @@ export default function HeroSection() {
       targetId: "mirofish-reports",
     },
     {
-      icon: "📋",
-      title: "Optimización",
-      desc: "Reportes diarios, semanales y mensuales de optimización temporal.",
-      targetId: "optimizacion",
-    },
-    {
       icon: "🎯",
       title: "Estrategia",
       desc: "Optimización estratégica contra la meta 5-year de RR ALIADOS.",
@@ -91,7 +85,7 @@ export default function HeroSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
           {features.map((f, i) => (
             <button
               key={f.title}

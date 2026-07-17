@@ -16,8 +16,7 @@ export const searchIndex: SearchItem[] = [
   { id: "financial-health", title: "Salud Financiera", description: "Capital, runway y costos operativos", type: "widget", section: "COMANDO", targetId: "financial-health", icon: "🏦" },
 
   // Widgets de Reportes
-  { id: "mirofish-reports", title: "MiroFish Reports", description: "Reportes de predicciones con IA para los próximos 7 días", type: "widget", section: "REPORTES", targetId: "mirofish-reports", icon: "📊" },
-  { id: "optimizacion", title: "Optimización", description: "Reportes diarios, semanales y mensuales", type: "widget", section: "REPORTES", targetId: "optimizacion", icon: "📋" },
+  { id: "mirofish-reports", title: "Predicciones MiroFish", description: "Reportes de predicciones con IA para los próximos 7 días", type: "widget", section: "REPORTES", targetId: "mirofish-reports", icon: "📊" },
   { id: "estrategia", title: "Optimización Estratégica", description: "Reporte estratégico contra la meta 5-year de RR ALIADOS", type: "widget", section: "REPORTES", targetId: "estrategia", icon: "🎯" },
 
   // Aplicaciones
