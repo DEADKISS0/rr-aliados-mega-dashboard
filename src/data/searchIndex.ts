@@ -16,7 +16,7 @@ export const searchIndex: SearchItem[] = [
   { id: "financial-health", title: "Salud Financiera", description: "Capital, runway y costos operativos", type: "widget", section: "COMANDO", targetId: "financial-health", icon: "🏦" },
 
   // Widgets de Reportes
-  { id: "mirofish-reports", title: "Predicciones MiroFish", description: "Reportes de predicciones con IA para los próximos 7 días", type: "widget", section: "REPORTES", targetId: "mirofish-reports", icon: "📊" },
+  { id: "mirofish-reports", title: "Cotizador Predicciones", description: "KPIs densos + PDF/Excel MiroFish (preview opcional)", type: "widget", section: "REPORTES", targetId: "mirofish-reports", icon: "📊" },
   { id: "estrategia", title: "Optimización Estratégica", description: "Reporte estratégico contra la meta 5-year de RR ALIADOS", type: "widget", section: "REPORTES", targetId: "estrategia", icon: "🎯" },
 
   // Aplicaciones
@@ -27,6 +27,7 @@ export const searchIndex: SearchItem[] = [
   { id: "adquisicion", title: "Adquisición Clientes", description: "Panel de adquisición de clientes", type: "app", section: "APLICACIONES", targetId: "adquisicion", icon: "📈" },
   { id: "adq-talentos", title: "Adquisición Talento", description: "Entrevistas y adquisición de freelancers", type: "app", section: "APLICACIONES", targetId: "adq-talentos", icon: "👥" },
   { id: "dashweb", title: "DashWeb Core", description: "Plataforma ERP/CRM interna", type: "app", section: "APLICACIONES", targetId: "dashweb", icon: "🔧" },
+  { id: "saas-vertical", title: "SaaS Vertical Hub", description: "CRM panaderías, pipeline y demos", type: "app", section: "APLICACIONES", targetId: "saas-vertical", icon: "🥐" },
 
   // Skills Catalog
   { id: "skills-catalog", title: "Skills Catalog", description: "Catálogo completo de 35+ skills de IA", type: "section", section: "CATÁLOGO", targetId: "skills-catalog", icon: "📦" },
