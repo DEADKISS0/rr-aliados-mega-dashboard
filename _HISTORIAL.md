@@ -2,4 +2,6 @@
 
 | Fecha | Cambio |
 |-------|--------|
+| 17/07/2026 | **Vanguardia polish** | Badges IA/heurístico en reportes estratégicos; chatbot quick prompts envían al instante; PWA icons; sync_reports.ps1 LiteralPath; Modo Pitch + sidebar colapsable ya en prod. Deploy: https://rr-aliados-mega-dashboard.vercel.app |
 | 17/07/2026 | **Fix reportes IA + UI simétrica** | Fila de 3 reportes (Predicciones, Optimización temporal, Estrategia) con iframes 520px. `OptimizacionWidget` montado en `page.tsx`. Sidebar con IDs + auto-apertura de secciones colapsables. Hero compacto. `src/lib/llm.ts` + failover en `/api/chat`. `.env.example` documentado. Utilidades CSS `.report-card`, `.report-iframe`, `.apps-grid`. Build verificado en `C:\temp` (Drive corrompe node_modules). Deploy prod: https://skill-orchestrator-dashboard.vercel.app |
+| 17/07/2026 | **Reporte estratégico IA** | PDF `Reporte_Estrategico_2026-07-17_0417` sincronizado a `public/reports/` (60% progreso, sin texto fallback). |

@@ -14,12 +14,13 @@ Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colom
 
 | Feature | Descripción |
 |---------|-------------|
-| **Modo presentación** | Oculta widgets internos para pitches (botón en header) |
+| **Modo Pitch** | Vista cliente/inversor — oculta skills/ops/chatbot (atajo `P`) |
+| **Sidebar colapsable** | Rail de iconos en desktop con preferencia en localStorage |
 | **Command palette** | `Ctrl+K` — búsqueda + acciones rápidas (Wuunder, deploy, reportes) |
 | **Pipeline API** | `/api/pipeline` — deals Wuunder/Real Seguros en vivo |
 | **Automation health** | `/api/automation` — estado de scripts MiroFish, sync, deploy |
 | **Meta 5 años** | Progreso hacia visión 2026→2031 desde `_HOJA_DE_RUTA.md` |
-| **PWA** | `manifest.json` con colores pitch/ember |
+| **PWA** | `manifest.json` con iconos brand + colores pitch/ember |
 
 ## Widgets de reportes IA
 
@@ -56,7 +57,7 @@ npm run dev
 
 | Variable | Uso |
 |----------|-----|
-| `OPENROUTER_API_KEY` / `GROQ_API_KEY` | Chatbot IA (failover automático) |
+| `OPENROUTER_API_KEY` / `GROQ_API_KEY` / `OPENCODE_API_KEY` | Chatbot IA (failover automático) |
 | `GOOGLE_ANALYTICS_PROPERTY_ID` | GA4 real |
 | `GOOGLE_SERVICE_ACCOUNT_KEY` | GA4 real |
 | `GOOGLE_CALENDAR_*` | Calendar real |

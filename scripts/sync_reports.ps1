@@ -18,7 +18,8 @@ function Sync-Folder {
     if (-not (Test-Path $Dest)) {
         New-Item -ItemType Directory -Path $Dest -Force | Out-Null
     }
-    $files = Get-ChildItem -Path $Source -Include *.pdf,*.xlsx,*.json -Recurse -File -ErrorAction SilentlyContinue
+    $files = Get-ChildItem -LiteralPath $Source -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object { $_.Extension -in '.pdf', '.xlsx', '.json' }
     $count = 0
     foreach ($f in $files) {
         Copy-Item -Path $f.FullName -Destination (Join-Path $Dest $f.Name) -Force

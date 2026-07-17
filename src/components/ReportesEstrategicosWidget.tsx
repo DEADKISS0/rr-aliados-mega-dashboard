@@ -8,6 +8,7 @@ interface EstrategicoEntry {
   label?: string;
   pdf: string;
   excel: string;
+  heuristic?: boolean;
   summary?: {
     progreso?: string;
     acciones?: number;
@@ -28,7 +29,10 @@ export default function ReportesEstrategicosWidget() {
     fetch("/reports/estrategicos_index.json")
       .then((r) => r.json())
       .then((data) => {
-        const list: EstrategicoEntry[] = data.reports || [];
+        const list: EstrategicoEntry[] = (data.reports || []).map((r: EstrategicoEntry) => ({
+          ...r,
+          heuristic: r.label?.toLowerCase().includes("heuríst") || false,
+        }));
         setReports(list);
         setSelectedIndex(0);
         setLastUpdate(new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }));
@@ -65,6 +69,15 @@ export default function ReportesEstrategicosWidget() {
         </button>
       }
     >
+      {selectedReport?.heuristic && (
+        <span className="skill-badge heuristic mb-2 inline-flex" title="Generado sin IA conectada">
+          Modo heurístico
+        </span>
+      )}
+      {!selectedReport?.heuristic && selectedReport && (
+        <span className="skill-badge active mb-2 inline-flex">Generado con IA</span>
+      )}
+
       <ReportSelector
         reports={reports}
         selectedDate={selectedReport?.date ?? null}
@@ -113,7 +126,10 @@ export default function ReportesEstrategicosWidget() {
 
       {!selectedReport && (
         <div className="p-8 text-center" style={{ color: "var(--text-muted)" }}>
-          <p className="text-sm">No hay reportes estratégicos generados aún.</p>
+          <p className="text-sm mb-2">No hay reportes estratégicos generados aún.</p>
+          <p className="text-xs font-mono-label">
+            Regenerar vía MiroFish-Lite → luego <code>scripts/sync_reports.ps1</code>
+          </p>
         </div>
       )}
 

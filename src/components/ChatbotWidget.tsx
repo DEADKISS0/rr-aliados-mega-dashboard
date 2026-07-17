@@ -73,19 +73,18 @@ export default function ChatbotWidget() {
     }
   };
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  const sendMessage = async (overrideText?: string) => {
+    const text = (overrideText ?? input).trim();
+    if (!text || loading) return;
 
-    const userMessage = { role: "user" as const, content: input };
+    const userMessage = { role: "user" as const, content: text };
     setMessages(prev => [...prev, userMessage]);
-    const currentInput = input;
     setInput("");
     setLoading(true);
 
-    // Check for PDF generation commands
-    const lower = currentInput.toLowerCase();
+    const lower = text.toLowerCase();
     if (lower.startsWith("generar reporte") || lower.startsWith("crear reporte") || lower.startsWith("exportar reporte")) {
-      const topic = currentInput.replace(/^(generar|crear|exportar)\s+reporte\s*/i, "").trim() || "Análisis General";
+      const topic = text.replace(/^(generar|crear|exportar)\s+reporte\s*/i, "").trim() || "Análisis General";
       await generateReport(topic);
       return;
     }
@@ -95,14 +94,14 @@ export default function ChatbotWidget() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: currentInput,
+          message: text,
           history: messages.slice(-6),
         }),
       });
 
       const data = await resp.json();
       setMessages(prev => [...prev, { role: "assistant", content: data.reply || "Error al obtener respuesta." }]);
-    } catch (e) {
+    } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Error de conexión. Intenta de nuevo." }]);
     } finally {
       setLoading(false);
@@ -149,7 +148,7 @@ export default function ChatbotWidget() {
         {quickCommands.map((cmd, i) => (
           <button
             key={i}
-            onClick={() => { setInput(cmd.cmd); }}
+            onClick={() => { void sendMessage(cmd.cmd); }}
             className="text-[10px] px-2 py-1 rounded transition-colors hover:bg-white/10"
             style={{ background: "var(--bg-card)", color: "var(--text-secondary)" }}
           >
