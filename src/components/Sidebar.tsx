@@ -10,9 +10,9 @@ interface SidebarProps {
   onCollapseToggle?: () => void;
 }
 
-const comando = ["Inicio", "Métricas", "Pipeline", "Finanzas", "Calendario", "Tareas", "Comandos", "Exportar"];
+const comando = ["Inicio", "Métricas", "Pipeline", "Finanzas", "Calendario", "Tareas", "Exportar"];
 const reportes = ["MiroFish Reports", "Estrategia"];
-const aplicaciones = ["Company Hub", "Cotizador", "Altruismo", "Skills Hub App", "Adquisición Clientes", "Adquisición Talento", "DashWeb", "Skills Catalog"];
+const aplicaciones = ["Company Hub", "Cotizador", "Altruismo", "Skills Hub App", "Adquisición Clientes", "Adquisición Talento", "DashWeb", "Skills Catalog", "SaaS Vertical"];
 const dataAnalytics = ["Excel Widget", "Google Maps", "Google News", "Amazon Analyzer", "Metricool"];
 const research = ["Web Research", "Firecrawl", "NotebookLM"];
 const devQA = ["Karpathy Rules", "Debugging", "Verification", "QA Auditor", "Loop Mode", "Quality Loop"];
@@ -76,7 +76,6 @@ const NAV_IDS: Record<string, string> = {
   Finanzas: "financial-health",
   Calendario: "calendar-widget",
   Tareas: "task-monitor",
-  Comandos: "command-center",
   Exportar: "export-widget",
   "MiroFish Reports": "mirofish-reports",
   Estrategia: "estrategia",
@@ -87,6 +86,7 @@ const NAV_IDS: Record<string, string> = {
   "Adquisición Clientes": "adquisicion",
   "Adquisición Talento": "adq-talentos",
   DashWeb: "dashweb",
+  "SaaS Vertical": "saas-vertical",
   "Skills Catalog": "skills-catalog",
 };
 

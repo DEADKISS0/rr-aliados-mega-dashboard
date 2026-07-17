@@ -8,7 +8,6 @@ const NAV_TO_ID: Record<string, string> = {
   Finanzas: "financial-health",
   Calendario: "calendar-widget",
   Tareas: "task-monitor",
-  Comandos: "command-center",
   Exportar: "export-widget",
   "MiroFish Reports": "mirofish-reports",
   Estrategia: "estrategia",
@@ -19,6 +18,7 @@ const NAV_TO_ID: Record<string, string> = {
   "Adquisición Clientes": "adquisicion",
   "Adquisición Talento": "adq-talentos",
   DashWeb: "dashweb",
+  "SaaS Vertical": "saas-vertical",
   "Skills Catalog": "skills-catalog",
 };
 

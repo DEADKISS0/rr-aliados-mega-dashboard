@@ -52,7 +52,6 @@ export function getMetrics(
   strategicReports: number,
   installedSkills: number,
   totalSkills: number,
-  optimizationReports = 0,
   reportTrend?: ReportTrendContext
 ): Metric[] {
   const ctx = getBusinessContext();
@@ -72,8 +71,8 @@ export function getMetrics(
       id: "reports",
       label: "Reportes Totales",
       icon: "📊",
-      value: predictionReports + strategicReports + optimizationReports,
-      subtitle: `${predictionReports} pred · ${strategicReports} estr · ${optimizationReports} opt`,
+      value: predictionReports + strategicReports,
+      subtitle: `${predictionReports} pred · ${strategicReports} estr`,
       color: "var(--ember)",
       trend: (thisWeek ?? 0) > 0 || predictionReports > 0 ? "up" : "stable",
       trendValue: reportsTrendValue,

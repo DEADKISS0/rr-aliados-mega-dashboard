@@ -16,6 +16,7 @@ interface EstrategicoEntry {
     acciones?: number;
     urgentes?: number;
     quality?: "verified" | "rejected";
+    mode?: "ai_verified" | "deterministic_evidence";
   };
 }
 
@@ -84,6 +85,8 @@ export default function ReportesEstrategicosWidget() {
       <div className="flex items-center gap-2 mb-2 flex-wrap">
         {selectedReport?.heuristic ? (
           <span className="skill-badge heuristic">Heurístico</span>
+        ) : selectedReport?.summary?.mode === "deterministic_evidence" ? (
+          <span className="skill-badge context">Evidencia verificable</span>
         ) : selectedReport ? (
           <span className="skill-badge active">IA</span>
         ) : null}

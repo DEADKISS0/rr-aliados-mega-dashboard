@@ -143,10 +143,9 @@ async function statPublic(relPath: string): Promise<{
 export async function GET() {
   const now = new Date();
 
-  const [pred, strat, opt, finance] = await Promise.all([
+  const [pred, strat, finance] = await Promise.all([
     readIndexFreshness("reports/predicciones_index.json"),
     readIndexFreshness("reports/estrategicos_index.json"),
-    readIndexFreshness("optimizacion/reports_index.json"),
     statPublic("data/finance_snapshot.json"),
   ]);
 
@@ -172,14 +171,6 @@ export async function GET() {
         ? `Índice: ${strat.label} (fuente ${strat.source})`
         : "reporte_optimizacion_estrategica.py → estrategicos_index.json",
       ageHours: strat.ageHours !== undefined ? Math.round(strat.ageHours * 10) / 10 : undefined,
-    },
-    {
-      id: "optimization",
-      name: "Índice Optimización (archivo)",
-      status: statusFromAge(opt.exists, opt.ageHours),
-      lastRun: opt.stamp ? formatLastRun(opt.stamp) : undefined,
-      detail: "optimization_report.py → optimizacion/reports_index.json (no montado en UI)",
-      ageHours: opt.ageHours !== undefined ? Math.round(opt.ageHours * 10) / 10 : undefined,
     },
     {
       id: "reports-sync",
@@ -224,6 +215,7 @@ export async function GET() {
     { id: "adq-talentos", name: "Adq. Talento", url: "https://rr-adq-talentos.vercel.app/" },
     { id: "altruismo", name: "Altruismo", url: "https://altruismo-web.vercel.app/es" },
     { id: "saas-vertical", name: "SaaS Vertical", url: "https://rr-saas-vertical.vercel.app/" },
+    { id: "dashweb", name: "DashWeb Core", url: "https://dashweb-core-frontend-beta.up.railway.app/login" },
   ];
 
   const ecoJobs = await Promise.all(

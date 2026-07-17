@@ -10,7 +10,6 @@ import { useActiveWidgetHighlight } from "@/hooks/useActiveWidgetHighlight";
 import BusinessMetricsWidget from "@/components/BusinessMetricsWidget";
 import CalendarWidget from "@/components/CalendarWidget";
 import TaskMonitorWidget from "@/components/TaskMonitorWidget";
-import CommandCenterWidget from "@/components/CommandCenterWidget";
 import ChatbotWidget from "@/components/ChatbotWidget";
 import GoogleAnalyticsWidget from "@/components/GoogleAnalyticsWidget";
 import GoogleCalendarWidget from "@/components/GoogleCalendarWidget";
@@ -168,16 +167,13 @@ export default function Home() {
 
             {/* Zona 5 — Operaciones */}
             <SectionHeader number="04" title="Operaciones" subtitle="Calendario, tareas y exportación" />
-            <div id="calendar-widget" className="col-3">
+            <div id="calendar-widget" className="col-4">
               <CalendarWidget />
             </div>
-            <div id="task-monitor" className="col-3" data-pitch-hide>
+            <div id="task-monitor" className="col-4" data-pitch-hide>
               <TaskMonitorWidget />
             </div>
-            <div id="command-center" className="col-3" data-pitch-hide>
-              <CommandCenterWidget />
-            </div>
-            <div id="export-widget" className="col-3" data-pitch-hide>
+            <div id="export-widget" className="col-4" data-pitch-hide>
               <ExportWidget />
             </div>
             <div id="automation-health" className="col-12" data-pitch-hide>

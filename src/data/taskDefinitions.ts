@@ -19,15 +19,6 @@ export const taskDefinitions: TaskDefinition[] = [
     status: "success",
   },
   {
-    id: "optimization",
-    name: "Reportes de Optimización",
-    description: "Genera reportes diario, semanal, mensual y dashboard",
-    schedule: "Diario 05:00 y 17:00",
-    script: "optimization_report.py",
-    lastRun: "2026-07-14T05:44:00",
-    status: "success",
-  },
-  {
     id: "strategic",
     name: "Reporte Estratégico",
     description: "Análisis estratégico contra la meta 5-year",

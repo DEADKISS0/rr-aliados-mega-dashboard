@@ -10,21 +10,16 @@ export default function BusinessMetricsWidget() {
 
   const fetchData = useCallback(async () => {
     try {
-      const [predRes, stratRes, optRes] = await Promise.all([
+      const [predRes, stratRes] = await Promise.all([
         fetch("/reports/predicciones_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
         fetch("/reports/estrategicos_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
-        fetch("/optimizacion/reports_index.json").then(r => r.json()).catch(() => ({ reports: {} })),
       ]);
       const predReports = predRes.reports || [];
       const predCount = predReports.length;
       const predDates: string[] = predReports.map((r: { date?: string }) => r.date).filter(Boolean);
       const stratCount = stratRes.reports?.length || 0;
-      const optReports = optRes.reports || {};
-      const optCount = Object.values(optReports as Record<string, unknown[]>).reduce(
-        (a, b) => a + (Array.isArray(b) ? b.length : 0), 0
-      );
       setMetrics(
-        getMetrics(predCount, stratCount, STATS.installed, STATS.total, optCount, {
+        getMetrics(predCount, stratCount, STATS.installed, STATS.total, {
           latestPredictionDate: predDates[0],
           predictionDates: predDates,
         })

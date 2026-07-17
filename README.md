@@ -25,7 +25,7 @@ Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colom
 | **Ecosystem health** | Ping Cotizador / Skills Hub / Adq Talento en `/api/automation` |
 | **Sidebar colapsable** | Rail de iconos en desktop con preferencia en localStorage |
 | **Command palette** | `Ctrl+K` — búsqueda + acciones rápidas (Wuunder, deploy, reportes) |
-| **Pipeline API** | `/api/pipeline` — deals Wuunder/Real Seguros en vivo |
+| **Pipeline API** | `/api/pipeline` — snapshot interno de deals; no sustituye DashWeb Core |
 | **Automation health** | `/api/automation` — frescura real de índices (mtime, stale >24h) |
 | **Finance snapshot** | `public/data/finance_snapshot.json` — capital/burn/Wuunder (sin CRM) |
 | **Escenario Wuunder** | Toggle local en Salud Financiera (Abierto/Cerrado → runway) |
@@ -38,15 +38,14 @@ Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colom
 |--------|-------------|--------------|
 | Predicciones | `/reports/predicciones_index.json` | `public/reports/` |
 | Estrategia | `/reports/estrategicos_index.json` | `public/reports/` |
-| Optimización | `/optimizacion/reports_index.json` | `public/optimizacion/` |
 
 ## Pipeline
 
 ```
-enhanced_report.py → public/reports/ (+ predicciones_index.json, estrategicos_index.json)
-optimization_report.py → public/optimizacion/ (+ reports_index.json)
+enhanced_report.py → public/reports/ (+ predicciones_index.json)
+reporte_optimizacion_estrategica.py → public/reports/ (+ estrategicos_index.json, action_ledger.json)
          ↓
-scripts/sync_reports.ps1  (copia PDFs desde MiroFish-Lite)
+scripts/sync_reports.ps1  (valida índices y artefactos publicados)
          ↓
 vercel deploy --prod --yes
          ↓
@@ -70,6 +69,7 @@ npm run dev
 | `OPENROUTER_API_KEY` / `GROQ_API_KEY` / `OPENCODE_API_KEY` | Chatbot IA (failover automático) |
 | `MIROFISH_WEBHOOK_URL` | Opcional — botón Regenerar dispara webhook |
 | `MIROFISH_WEBHOOK_SECRET` | Bearer opcional para el webhook |
+| `DASHWEB_API_URL` / `DASHWEB_SERVICE_TOKEN` | Proxy servidor read-only hacia DashWeb Core; nunca exponer al cliente |
 | `GOOGLE_ANALYTICS_PROPERTY_ID` | GA4 property ID (número o `properties/XXXX`) |
 | `GOOGLE_SERVICE_ACCOUNT_KEY` | JSON completo de service account (Viewer en GA4) |
 | `METRICOOL_API_TOKEN` | Opcional — habilita stub Metricool configurado |
@@ -78,7 +78,19 @@ npm run dev
 | `AUTH_OPS_PASSWORD` | Clave rol ops (APIs + UI completa) |
 | `AUTH_PITCH_PASSWORD` | Clave rol pitch (Pitch Mode forzado, sin APIs sensibles) |
 | `AUTH_CLIENT_PASSWORD` | Clave rol client (igual pitch) |
-| `GOOGLE_CALENDAR_*` | Calendar (DEMO operativo si falta) |
+| `GOOGLE_CALENDAR_CLIENT_ID` | OAuth client ID (Google Cloud → Calendar API) |
+| `GOOGLE_CALENDAR_CLIENT_SECRET` | OAuth client secret |
+| `GOOGLE_CALENDAR_REFRESH_TOKEN` | Refresh token de `rraliadosteam@gmail.com` (scope `calendar.readonly`) |
+| `GOOGLE_CALENDAR_ID` | Opcional — default `rraliadosteam@gmail.com` |
+
+Sin `GOOGLE_CALENDAR_*` completos, `#google-calendar` y `#calendar-widget` muestran badge **DEMO** con agenda operativa MiroFish/Wuunder (no se finge live). Con credenciales válidas en Vercel, `/api/calendar` consulta Calendar API v3 en vivo.
+
+### Google Calendar en Vercel (live)
+
+1. Google Cloud Console → habilitar **Google Calendar API**.
+2. Crear OAuth client (Desktop o Web) y obtener refresh token para `rraliadosteam@gmail.com` con scope `https://www.googleapis.com/auth/calendar.readonly`.
+3. En Vercel (Production): `GOOGLE_CALENDAR_CLIENT_ID`, `GOOGLE_CALENDAR_CLIENT_SECRET`, `GOOGLE_CALENDAR_REFRESH_TOKEN` (+ opcional `GOOGLE_CALENDAR_ID`).
+4. Redeploy. Verificar `GET /api/calendar` → `"live": true, "demo": false`.
 
 Sin credenciales, GA/Calendar/Metricool muestran badge **DEMO/Mock**. Sin `MIROFISH_WEBHOOK_URL`, Regenerar copia comandos al clipboard.
 

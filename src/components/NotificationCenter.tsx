@@ -19,10 +19,9 @@ export default function NotificationCenter() {
   const fetchNotifications = useCallback(async () => {
     try {
       const ctx = await fetchBusinessContext();
-      const [predRes, stratRes, optRes, autoRes] = await Promise.all([
+      const [predRes, stratRes, autoRes] = await Promise.all([
         fetch("/reports/predicciones_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
         fetch("/reports/estrategicos_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
-        fetch("/optimizacion/reports_index.json").then((r) => r.json()).catch(() => ({ reports: {} })),
         fetch("/api/automation").then((r) => r.json()).catch(() => null),
       ]);
 
@@ -108,17 +107,6 @@ export default function NotificationCenter() {
           id: `strat-${latest.date}`,
           message: `Reporte estratégico: ${latest.label || latest.date}`,
           type: "success",
-          timestamp: new Date(),
-          read: false,
-        });
-      }
-
-      const optDiarios = optRes.reports?.diarios;
-      if (optDiarios?.length > 0) {
-        newNotifications.push({
-          id: `opt-${optDiarios[0].date}`,
-          message: `Optimización diaria: ${optDiarios[0].name}`,
-          type: "info",
           timestamp: new Date(),
           read: false,
         });
