@@ -4,7 +4,11 @@ import WidgetCard from "@/components/ui/WidgetCard";
 
 interface GAData {
   configured?: boolean;
+  live?: boolean;
+  demo?: boolean;
   message?: string;
+  error?: string;
+  cta?: { label?: string; docs?: string };
   realTime: { activeUsers: number; pageViews: number; sessions: number };
   today: { users: number; pageViews: number; sessions: number; bounceRate: string; avgSessionDuration: number };
   topPages: { page: string; views: number; percentage: string }[];
@@ -34,7 +38,7 @@ export default function GoogleAnalyticsWidget() {
     fetchData();
     const interval = setInterval(fetchData, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [refreshKey]);
+  }, [refreshKey, fetchData]);
 
   if (loading) {
     return (
@@ -46,11 +50,13 @@ export default function GoogleAnalyticsWidget() {
 
   if (!data) return null;
 
+  const isLive = Boolean(data.live && !data.demo);
+
   return (
     <WidgetCard
       title="Google Analytics"
       icon="📊"
-      badge="Tiempo Real"
+      badge={isLive ? "LIVE" : "DEMO"}
       badgeVariant="support"
       action={
         <button
@@ -62,16 +68,25 @@ export default function GoogleAnalyticsWidget() {
         </button>
       }
     >
-
-      {/* Warning if simulated */}
-      {!data.configured && (
-        <div className="banner-mock mb-3 flex items-center justify-between gap-2">
-          <span>⚠️ DEMO — Datos simulados. Conecta GA4 en .env.local</span>
-          <span className="skill-badge demo">Mock</span>
+      {!isLive && (
+        <div className="banner-mock mb-3 flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2">
+            <span>⚠️ {data.message || "DEMO — Conecta GA4 en Vercel"}</span>
+            <span className="skill-badge demo">Mock</span>
+          </div>
+          {data.cta?.docs && (
+            <span className="font-mono-label text-[9px]" style={{ color: "var(--ash)" }}>
+              {data.cta.label}: {data.cta.docs}
+            </span>
+          )}
+          {data.error && (
+            <span className="font-mono-label text-[9px]" style={{ color: "var(--danger)" }}>
+              {data.error}
+            </span>
+          )}
         </div>
       )}
 
-      {/* Real-time KPIs */}
       <div className="grid grid-cols-3 gap-2 mb-3">
         <div className="p-2 rounded-lg text-center" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}>
           <div className="text-lg font-bold" style={{ color: "var(--ember)" }}>{data.realTime.activeUsers}</div>
@@ -87,7 +102,6 @@ export default function GoogleAnalyticsWidget() {
         </div>
       </div>
 
-      {/* Today's metrics */}
       <div className="grid grid-cols-2 gap-2 mb-3">
         <div className="p-2 rounded-lg" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}>
           <div className="text-[10px] font-semibold" style={{ color: "var(--text-primary)" }}>Hoy</div>
@@ -98,29 +112,34 @@ export default function GoogleAnalyticsWidget() {
         <div className="p-2 rounded-lg" style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}>
           <div className="text-[10px] font-semibold" style={{ color: "var(--text-primary)" }}>Engagement</div>
           <div className="text-xs mt-1" style={{ color: "var(--text-secondary)" }}>
-            Rebote: {data.today.bounceRate} · Duración: {Math.floor(data.today.avgSessionDuration / 60)}m
+            Rebote: {data.today.bounceRate} · Duración:{" "}
+            {data.today.avgSessionDuration
+              ? `${Math.floor(data.today.avgSessionDuration / 60)}m`
+              : "—"}
           </div>
         </div>
       </div>
 
-      {/* Top pages */}
       <div className="mb-3">
         <div className="text-[10px] font-semibold mb-2" style={{ color: "var(--text-primary)" }}>Páginas Top</div>
         {data.topPages.slice(0, 3).map((p, i) => (
-          <div key={i} className="flex items-center gap-2 text-[11px] mb-1">
+          <div key={`${p.page}-${i}`} className="flex items-center gap-2 text-[11px] mb-1">
             <span style={{ color: "var(--text-muted)" }}>{i + 1}.</span>
-            <span className="flex-1" style={{ color: "var(--text-primary)" }}>{p.page}</span>
+            <span className="flex-1 truncate" style={{ color: "var(--text-primary)" }}>{p.page}</span>
             <span style={{ color: "var(--text-muted)" }}>{p.percentage}</span>
           </div>
         ))}
       </div>
 
-      {/* Traffic sources */}
       <div>
         <div className="text-[10px] font-semibold mb-2" style={{ color: "var(--text-primary)" }}>Fuentes</div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           {data.trafficSources.map((s, i) => (
-            <div key={i} className="text-[10px] px-1.5 py-0.5 rounded" style={{ background: "var(--border)", color: "var(--text-secondary)" }}>
+            <div
+              key={`${s.source}-${i}`}
+              className="text-[10px] px-1.5 py-0.5 rounded"
+              style={{ background: "var(--border)", color: "var(--text-secondary)" }}
+            >
               {s.source} {s.percentage}
             </div>
           ))}
@@ -130,6 +149,7 @@ export default function GoogleAnalyticsWidget() {
       {lastUpdate && (
         <div className="mt-2 text-[10px] text-right" style={{ color: "var(--text-muted)" }}>
           Última actualización: {lastUpdate}
+          {isLive ? " · GA4 Data API" : ""}
         </div>
       )}
     </WidgetCard>

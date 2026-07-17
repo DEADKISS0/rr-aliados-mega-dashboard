@@ -17,6 +17,9 @@ Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colom
 | **Modo Pitch** | Vista cliente/inversor — oculta skills/ops/chatbot (atajo `P`) + Pack Pitch PDF |
 | **Chat grounded** | `/api/chat` inyecta KPIs, pipeline interno y últimos reportes MiroFish |
 | **Pack Pitch** | `/api/generate-pdf` `template:pitch` — HTML branded + imprimir/PDF |
+| **GA4** | `/api/analytics` — Data API real si hay service account; si no, DEMO vacío (sin random) |
+| **News** | `/api/news` — Google News RSS live + cache `public/data/news_feed.json` |
+| **Metricool** | `/api/metricool` — stub listo; sin token = 0 métricas (no fake followers) |
 | **Sidebar colapsable** | Rail de iconos en desktop con preferencia en localStorage |
 | **Command palette** | `Ctrl+K` — búsqueda + acciones rápidas (Wuunder, deploy, reportes) |
 | **Pipeline API** | `/api/pipeline` — deals Wuunder/Real Seguros en vivo |
@@ -64,9 +67,11 @@ npm run dev
 | `OPENROUTER_API_KEY` / `GROQ_API_KEY` / `OPENCODE_API_KEY` | Chatbot IA (failover automático) |
 | `MIROFISH_WEBHOOK_URL` | Opcional — botón Regenerar dispara webhook |
 | `MIROFISH_WEBHOOK_SECRET` | Bearer opcional para el webhook |
-| `GOOGLE_ANALYTICS_PROPERTY_ID` | GA4 real |
-| `GOOGLE_SERVICE_ACCOUNT_KEY` | GA4 real |
-| `GOOGLE_CALENDAR_*` | Calendar real |
+| `GOOGLE_ANALYTICS_PROPERTY_ID` | GA4 property ID (número o `properties/XXXX`) |
+| `GOOGLE_SERVICE_ACCOUNT_KEY` | JSON completo de service account (Viewer en GA4) |
+| `METRICOOL_API_TOKEN` | Opcional — habilita stub Metricool configurado |
+| `METRICOOL_BRAND_ID` | Opcional — brand Metricool |
+| `GOOGLE_CALENDAR_*` | Calendar (DEMO operativo si falta) |
 
 Sin credenciales, GA/Calendar/Metricool muestran badge **DEMO/Mock**. Sin `MIROFISH_WEBHOOK_URL`, Regenerar copia comandos al clipboard.
 
@@ -86,6 +91,14 @@ Sin credenciales, GA/Calendar/Metricool muestran badge **DEMO/Mock**. Sin `MIROF
 | Después | `vercel deploy --prod --yes` |
 
 `/api/automation` marca warning/error si los índices en `public/` tienen mtime >24h / >72h.
+
+### News (posicionamiento)
+
+```powershell
+.\scripts\sync_news.ps1
+```
+
+También disponible en vivo: `GET /api/news` (RSS Google News CO). Cache: `public/data/news_feed.json`.
 
 ### Caja (sin CRM)
 
