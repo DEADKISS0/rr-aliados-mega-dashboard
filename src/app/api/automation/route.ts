@@ -216,6 +216,8 @@ export async function GET() {
     { id: "altruismo", name: "Altruismo", url: "https://altruismo-web.vercel.app/es" },
     { id: "saas-vertical", name: "SaaS Vertical", url: "https://rr-saas-vertical.vercel.app/" },
     { id: "dashweb", name: "DashWeb Core", url: "https://dashweb-core-frontend-beta.up.railway.app/login" },
+    { id: "adquisicion", name: "Adq. Clientes", url: "https://3mpm6kcgvmpz4.kimi.page/" },
+    { id: "company-hub", name: "Company Hub", url: "https://x3hlysjfyb4ta.kimi.page/" },
   ];
 
   const ecoJobs = await Promise.all(

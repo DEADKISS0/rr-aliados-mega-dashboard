@@ -6,7 +6,7 @@ import type { EcosystemApp } from "@/data/ecosystemApps";
 
 type LoadState = "loading" | "loaded" | "timeout" | "error" | "card";
 
-const LOAD_TIMEOUT_MS = 20000;
+const LOAD_TIMEOUT_MS = 12000;
 
 interface Props {
   app: EcosystemApp;
@@ -44,6 +44,8 @@ export default function ExternalAppWidget({ app }: Props) {
 
   useEffect(() => {
     if (forceCard) return;
+    // Cargar de inmediato (evita "Cargando…" eterno si el grid está fuera de viewport)
+    setInView(true);
     const el = wrapRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -53,7 +55,7 @@ export default function ExternalAppWidget({ app }: Props) {
           io.disconnect();
         }
       },
-      { rootMargin: "160px" }
+      { rootMargin: "240px" }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -148,7 +150,14 @@ export default function ExternalAppWidget({ app }: Props) {
               <span className="inline-block w-2 h-2 rounded-full" style={{ background: statusDot }} />
               {alive === "up" ? "Online" : alive === "down" ? "Sin respuesta" : "Estado n/d"}
             </div>
-            <span className="btn-primary !py-2 !px-4 text-xs pointer-events-none">Abrir aplicación ↗</span>
+            <span className="btn-primary !py-2 !px-4 text-xs pointer-events-none">
+              {forceCard ? "Abrir en nueva pestaña ↗" : "Abrir aplicación ↗"}
+            </span>
+            <p className="text-[10px] max-w-xs" style={{ color: "var(--ash)" }}>
+              {forceCard
+                ? "Esta app no se embebe (auth o host). Usa Abrir para verla completa."
+                : "Si el embed falla, usa Abrir o Vista tarjeta."}
+            </p>
             {!forceCard && (
               <button
                 type="button"
@@ -160,7 +169,7 @@ export default function ExternalAppWidget({ app }: Props) {
                   retry();
                 }}
               >
-                Probar embed
+                Reintentar embed
               </button>
             )}
           </a>
