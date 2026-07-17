@@ -28,41 +28,115 @@ function statusFromAge(
   return "error";
 }
 
-function formatLastRun(mtime: Date): string {
-  return mtime.toLocaleString("es-CO", {
+function formatLastRun(d: Date): string {
+  return d.toLocaleString("es-CO", {
     dateStyle: "short",
     timeStyle: "short",
   });
 }
 
+/** Parse MiroFish index stamps like "2026-07-17 05:19" or "2026-07-17_0519". */
+function parseIndexStamp(raw?: string): Date | undefined {
+  if (!raw) return undefined;
+  const m = raw.match(/(\d{4})-(\d{2})-(\d{2})(?:[_\s](\d{2}):?(\d{2}))?/);
+  if (!m) return undefined;
+  const y = Number(m[1]);
+  const mo = Number(m[2]);
+  const d = Number(m[3]);
+  const hh = Number(m[4] ?? "0");
+  const mm = Number(m[5] ?? "0");
+  if (!y || !mo || !d) return undefined;
+  return new Date(y, mo - 1, d, hh, mm);
+}
+
+function ageHoursFrom(d: Date): number {
+  return (Date.now() - d.getTime()) / 3_600_000;
+}
+
+async function readIndexFreshness(relPath: string): Promise<{
+  exists: boolean;
+  stamp?: Date;
+  label?: string;
+  ageHours?: number;
+  source?: "index" | "mtime";
+}> {
+  const full = path.join(process.cwd(), "public", relPath);
+  try {
+    const raw = await fs.readFile(full, "utf8");
+    const data = JSON.parse(raw) as {
+      reports?:
+        | Array<{ label?: string; date?: string }>
+        | {
+            diarios?: Array<{ label?: string; date?: string; name?: string }>;
+          };
+      generated_at?: string;
+      updatedAt?: string;
+    };
+    const list = Array.isArray(data.reports)
+      ? data.reports
+      : data.reports?.diarios ?? [];
+    const first = list[0];
+    const label =
+      first?.label ||
+      ("name" in (first ?? {}) ? (first as { name?: string }).name : undefined) ||
+      first?.date ||
+      data.generated_at ||
+      data.updatedAt;
+    const fromIndex = parseIndexStamp(label) || parseIndexStamp(first?.date);
+    if (fromIndex) {
+      return {
+        exists: true,
+        stamp: fromIndex,
+        label,
+        ageHours: ageHoursFrom(fromIndex),
+        source: "index",
+      };
+    }
+    const st = await fs.stat(full);
+    return {
+      exists: true,
+      stamp: st.mtime,
+      label,
+      ageHours: ageHoursFrom(st.mtime),
+      source: "mtime",
+    };
+  } catch {
+    try {
+      const st = await fs.stat(full);
+      return {
+        exists: true,
+        stamp: st.mtime,
+        ageHours: ageHoursFrom(st.mtime),
+        source: "mtime",
+      };
+    } catch {
+      return { exists: false };
+    }
+  }
+}
+
 async function statPublic(relPath: string): Promise<{
   exists: boolean;
-  mtime?: Date;
+  stamp?: Date;
   ageHours?: number;
 }> {
   const full = path.join(process.cwd(), "public", relPath);
   try {
     const st = await fs.stat(full);
-    const ageHours = (Date.now() - st.mtimeMs) / 3_600_000;
-    return { exists: true, mtime: st.mtime, ageHours };
+    // Prefer content timestamps when file embeds updatedAt (finance snapshot)
+    try {
+      const raw = await fs.readFile(full, "utf8");
+      const data = JSON.parse(raw) as { updatedAt?: string };
+      const parsed = parseIndexStamp(data.updatedAt);
+      if (parsed) {
+        return { exists: true, stamp: parsed, ageHours: ageHoursFrom(parsed) };
+      }
+    } catch {
+      /* binary or non-json */
+    }
+    return { exists: true, stamp: st.mtime, ageHours: ageHoursFrom(st.mtime) };
   } catch {
     return { exists: false };
-  }
-}
-
-/** Prefer index JSON date label when fresher signal than fs mtime (CDN/deploy skew). */
-async function latestReportLabel(relPath: string): Promise<string | undefined> {
-  const full = path.join(process.cwd(), "public", relPath);
-  try {
-    const raw = await fs.readFile(full, "utf8");
-    const data = JSON.parse(raw) as {
-      reports?: Array<{ label?: string; date?: string }>;
-      generated_at?: string;
-    };
-    const first = data.reports?.[0];
-    return first?.label || first?.date || data.generated_at;
-  } catch {
-    return undefined;
   }
 }
 
@@ -70,25 +144,22 @@ export async function GET() {
   const now = new Date();
 
   const [pred, strat, opt, finance] = await Promise.all([
-    statPublic("reports/predicciones_index.json"),
-    statPublic("reports/estrategicos_index.json"),
-    statPublic("optimizacion/reports_index.json"),
+    readIndexFreshness("reports/predicciones_index.json"),
+    readIndexFreshness("reports/estrategicos_index.json"),
+    readIndexFreshness("optimizacion/reports_index.json"),
     statPublic("data/finance_snapshot.json"),
   ]);
 
-  const [predLabel, stratLabel] = await Promise.all([
-    latestReportLabel("reports/predicciones_index.json"),
-    latestReportLabel("reports/estrategicos_index.json"),
-  ]);
+  const syncAge = Math.max(pred.ageHours ?? 999, strat.ageHours ?? 999);
 
   const jobs: AutomationJob[] = [
     {
       id: "mirofish-daily",
       name: "MiroFish Predicciones",
       status: statusFromAge(pred.exists, pred.ageHours),
-      lastRun: pred.mtime ? formatLastRun(pred.mtime) : undefined,
-      detail: predLabel
-        ? `Último índice: ${predLabel} → predicciones_index.json`
+      lastRun: pred.stamp ? formatLastRun(pred.stamp) : undefined,
+      detail: pred.label
+        ? `Índice: ${pred.label} (fuente ${pred.source})`
         : "enhanced_report.py → predicciones_index.json",
       ageHours: pred.ageHours !== undefined ? Math.round(pred.ageHours * 10) / 10 : undefined,
     },
@@ -96,9 +167,9 @@ export async function GET() {
       id: "strategic",
       name: "Reporte Estratégico",
       status: statusFromAge(strat.exists, strat.ageHours),
-      lastRun: strat.mtime ? formatLastRun(strat.mtime) : undefined,
-      detail: stratLabel
-        ? `Último índice: ${stratLabel} → estrategicos_index.json`
+      lastRun: strat.stamp ? formatLastRun(strat.stamp) : undefined,
+      detail: strat.label
+        ? `Índice: ${strat.label} (fuente ${strat.source})`
         : "reporte_optimizacion_estrategica.py → estrategicos_index.json",
       ageHours: strat.ageHours !== undefined ? Math.round(strat.ageHours * 10) / 10 : undefined,
     },
@@ -106,30 +177,27 @@ export async function GET() {
       id: "optimization",
       name: "Índice Optimización (archivo)",
       status: statusFromAge(opt.exists, opt.ageHours),
-      lastRun: opt.mtime ? formatLastRun(opt.mtime) : undefined,
+      lastRun: opt.stamp ? formatLastRun(opt.stamp) : undefined,
       detail: "optimization_report.py → optimizacion/reports_index.json (no montado en UI)",
       ageHours: opt.ageHours !== undefined ? Math.round(opt.ageHours * 10) / 10 : undefined,
     },
     {
       id: "reports-sync",
       name: "Sync Reportes PDF",
-      status:
-        pred.exists && strat.exists
-          ? statusFromAge(true, Math.max(pred.ageHours ?? 999, strat.ageHours ?? 999))
-          : "warning",
+      status: pred.exists && strat.exists ? statusFromAge(true, syncAge) : "warning",
       lastRun:
-        pred.mtime || strat.mtime
+        pred.stamp || strat.stamp
           ? formatLastRun(
-              new Date(Math.max(pred.mtime?.getTime() ?? 0, strat.mtime?.getTime() ?? 0))
+              new Date(Math.max(pred.stamp?.getTime() ?? 0, strat.stamp?.getTime() ?? 0))
             )
           : undefined,
-      detail: "scripts/sync_reports.ps1 — PDFs desde MiroFish-Lite (stale >24h = revisar)",
+      detail: "scripts/sync_reports.ps1 — frescura desde fechas del índice (no mtime Vercel)",
     },
     {
       id: "finance-snapshot",
       name: "Finance Snapshot",
       status: finance.exists ? "ok" : "warning",
-      lastRun: finance.mtime ? formatLastRun(finance.mtime) : undefined,
+      lastRun: finance.stamp ? formatLastRun(finance.stamp) : undefined,
       detail: finance.exists
         ? "public/data/finance_snapshot.json — capital/burn (sin CRM)"
         : "Falta finance_snapshot.json",
@@ -146,7 +214,7 @@ export async function GET() {
       name: "Deploy Vercel",
       status: "ok",
       lastRun: "rr-aliados-mega-dashboard.vercel.app",
-      detail: "Build en Vercel (no local Drive). Salud de reportes = frescura de índices.",
+      detail: "Build en Vercel. Salud de reportes = fecha del índice JSON.",
     },
   ];
 
