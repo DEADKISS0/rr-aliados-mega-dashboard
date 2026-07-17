@@ -14,7 +14,9 @@ Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colom
 
 | Feature | Descripción |
 |---------|-------------|
-| **Modo Pitch** | Vista cliente/inversor — oculta skills/ops/chatbot (atajo `P`) |
+| **Modo Pitch** | Vista cliente/inversor — oculta skills/ops/chatbot (atajo `P`) + Pack Pitch PDF |
+| **Chat grounded** | `/api/chat` inyecta KPIs, pipeline interno y últimos reportes MiroFish |
+| **Pack Pitch** | `/api/generate-pdf` `template:pitch` — HTML branded + imprimir/PDF |
 | **Sidebar colapsable** | Rail de iconos en desktop con preferencia en localStorage |
 | **Command palette** | `Ctrl+K` — búsqueda + acciones rápidas (Wuunder, deploy, reportes) |
 | **Pipeline API** | `/api/pipeline` — deals Wuunder/Real Seguros en vivo |

@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import PitchPackButton from "@/components/ui/PitchPackButton";
 
 export default function ExportWidget() {
   const [exporting, setExporting] = useState(false);
@@ -7,24 +8,21 @@ export default function ExportWidget() {
   const exportToCSV = async () => {
     setExporting(true);
     try {
-      // Fetch report data
       const [predRes, stratRes] = await Promise.all([
-        fetch("/reports/predicciones_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
-        fetch("/reports/estrategicos_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
+        fetch("/reports/predicciones_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
+        fetch("/reports/estrategicos_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
       ]);
 
-      // Build CSV content
       let csv = "Tipo,Fecha,Label,Progreso,Acciones,Urgentes,Predicciones,Riesgos\n";
-      
-      predRes.reports?.forEach((r: any) => {
+
+      predRes.reports?.forEach((r: { date: string; label: string; summary?: { total_changes?: number; risks?: number } }) => {
         csv += `Predicciones,${r.date},"${r.label}",N/A,N/A,N/A,${r.summary?.total_changes || 0},${r.summary?.risks || 0}\n`;
       });
-      
-      stratRes.reports?.forEach((r: any) => {
+
+      stratRes.reports?.forEach((r: { date: string; label: string; summary?: { progreso?: string; acciones?: number; urgentes?: number } }) => {
         csv += `Estratégico,${r.date},"${r.label}",${r.summary?.progreso || "N/A"},${r.summary?.acciones || 0},${r.summary?.urgentes || 0},N/A,N/A\n`;
       });
 
-      // Download CSV
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -43,8 +41,8 @@ export default function ExportWidget() {
     setExporting(true);
     try {
       const [predRes, stratRes] = await Promise.all([
-        fetch("/reports/predicciones_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
-        fetch("/reports/estrategicos_index.json").then(r => r.json()).catch(() => ({ reports: [] })),
+        fetch("/reports/predicciones_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
+        fetch("/reports/estrategicos_index.json").then((r) => r.json()).catch(() => ({ reports: [] })),
       ]);
 
       const data = {
@@ -62,7 +60,7 @@ export default function ExportWidget() {
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `RR_ALIADOS_Export_${new Date().toISOString().split("T")[0]}.json`;
+      link.download = `RR_ALIADOS_Export_${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
       URL.revokeObjectURL(url);
     } catch (e) {
@@ -76,10 +74,19 @@ export default function ExportWidget() {
     <div className="card p-4 animate-in">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">📥</span>
-        <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Exportar Datos</h3>
+        <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
+          Exportar Datos
+        </h3>
       </div>
 
       <div className="space-y-2">
+        <div
+          className="w-full px-3 py-2 rounded-lg flex items-center justify-center"
+          style={{ background: "var(--ember-20)", border: "1px solid var(--ember-30)" }}
+        >
+          <PitchPackButton label="📄 Pack Pitch (PDF)" />
+        </div>
+
         <button
           onClick={exportToCSV}
           disabled={exporting}
@@ -107,7 +114,7 @@ export default function ExportWidget() {
       </div>
 
       <p className="text-[10px] mt-2 text-center" style={{ color: "var(--text-muted)" }}>
-        Exporta métricas y reportes para análisis externo
+        Pack Pitch = HTML branded + imprimir/PDF · CSV/JSON = métricas de reportes
       </p>
     </div>
   );

@@ -5,6 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 import GlobalSearch from "./GlobalSearch";
 import NotificationCenter from "./NotificationCenter";
 import { usePresentationMode } from "@/contexts/PresentationModeContext";
+import PitchPackButton from "@/components/ui/PitchPackButton";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -118,13 +119,16 @@ export default function Header({
             color: "var(--parchment)",
           }}
         >
-          <p className="text-xs sm:text-sm font-light">
+          <p className="text-xs sm:text-sm font-light min-w-0">
             <span className="font-mono-label" style={{ color: "var(--ember-light)" }}>Modo Pitch</span>
             {" — "}vista para cliente/inversor. Se ocultan tools internas.
           </p>
-          <button onClick={togglePresentationMode} className="btn-ghost !py-1 !px-2 text-xs flex-shrink-0">
-            Salir
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <PitchPackButton label="⬇ Pack Pitch" compact />
+            <button onClick={togglePresentationMode} className="btn-ghost !py-1 !px-2 text-xs">
+              Salir
+            </button>
+          </div>
         </div>
       )}
     </>

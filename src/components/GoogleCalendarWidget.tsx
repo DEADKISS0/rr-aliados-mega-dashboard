@@ -13,7 +13,9 @@ interface CalendarEvent {
 
 interface CalendarData {
   configured?: boolean;
+  demo?: boolean;
   message?: string;
+  cta?: { label?: string; docs?: string };
   today: CalendarEvent[];
   tomorrow: CalendarEvent[];
   thisWeek: CalendarEvent[];
@@ -72,10 +74,17 @@ export default function GoogleCalendarWidget() {
     >
 
       {/* Warning if simulated */}
-      {!data.configured && (
-        <div className="banner-mock mb-3 flex items-center justify-between gap-2">
-          <span>⚠️ DEMO — Eventos simulados</span>
-          <span className="skill-badge demo">Mock</span>
+      {(data.demo || !data.configured) && (
+        <div className="banner-mock mb-3 flex flex-col gap-1">
+          <div className="flex items-center justify-between gap-2">
+            <span>⚠️ DEMO — MiroFish + Wuunder (no Google live)</span>
+            <span className="skill-badge demo">Mock</span>
+          </div>
+          {data.cta?.docs && (
+            <span className="font-mono-label text-[9px]" style={{ color: "var(--ash)" }}>
+              CTA: {data.cta.label || "OAuth"} · {data.cta.docs}
+            </span>
+          )}
         </div>
       )}
 

@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { chatCompletion } from "@/lib/llm";
+import { buildDashboardGrounding } from "@/lib/dashboardContext";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,16 +13,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Mensaje inválido" }, { status: 400 });
     }
 
-    const systemPrompt = `Eres el asistente de RR ALIADOS S.A.S., una empresa colombiana de tecnología en posicionamiento online. 
-Tu META es SER LA EMPRESA DE TECNOLOGÍA EN POSICIONAMIENTO ONLINE MÁS GRANDE DE COLOMBIA.
+    const grounding = await buildDashboardGrounding();
 
-El dashboard tiene:
-- 36 skills de IA instaladas de 291 disponibles
-- Reportes de predicciones y optimización estratégica
-- 7 aplicaciones corporativas (Company Hub, Cotizador, Altruismo, etc.)
-- Métricas del negocio y tareas programadas
+    const systemPrompt = `Eres el asistente operativo de RR ALIADOS S.A.S. (Medellín). Meta: #1 en tecnología de posicionamiento digital en Colombia.
 
-Responde en español neutro. Sé conciso y útil.`;
+Responde en español, conciso y accionable. Prioriza "qué hacer hoy".
+Cita números del CONTEXTO VIVO cuando hables de runway, capital, clientes, Wuunder o deals.
+Si el usuario pide un pack pitch / PDF, indícale el botón "Pack Pitch" del dashboard o el comando de exportar.
+
+${grounding.text}`;
 
     const safeHistory = Array.isArray(history)
       ? history.slice(-6).map((h: { role: string; content: string }) => ({
@@ -35,7 +38,7 @@ Responde en español neutro. Sé conciso y útil.`;
 
     const { content, provider } = await chatCompletion(messages, {
       maxTokens: 1024,
-      temperature: 0.7,
+      temperature: 0.4,
     });
 
     if (!content) {
@@ -48,7 +51,11 @@ Responde en español neutro. Sé conciso y útil.`;
       );
     }
 
-    return NextResponse.json({ reply: content, provider });
+    return NextResponse.json({
+      reply: content,
+      provider,
+      groundedAt: grounding.generatedAt,
+    });
   } catch {
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }

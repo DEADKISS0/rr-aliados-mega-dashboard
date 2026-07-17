@@ -7,13 +7,13 @@ export interface CalendarEvent {
 }
 
 export const calendarEvents: CalendarEvent[] = [
-  { id: "1", title: "Reporte de Predicciones", date: "2026-07-14", type: "report", recurring: "daily" },
-  { id: "2", title: "Reporte Estratégico", date: "2026-07-14", type: "report", recurring: "daily" },
+  { id: "1", title: "MiroFish Predicciones", date: "2026-07-14", type: "report", recurring: "daily" },
+  { id: "2", title: "MiroFish Estratégico", date: "2026-07-14", type: "report", recurring: "daily" },
   { id: "3", title: "Deploy Vercel", date: "2026-07-14", type: "deploy", recurring: "daily" },
   { id: "4", title: "Revisión Semanal", date: "2026-07-18", type: "meeting", recurring: "weekly" },
-  { id: "5", title: "Cierre Mensual Q2", date: "2026-07-31", type: "deadline" },
-  { id: "6", title: "Backup Data", date: "2026-07-20", type: "deploy" },
-  { id: "7", title: "Análisis Competitivo", date: "2026-07-25", type: "meeting" },
+  { id: "5", title: "Deadline Wuunder — firma", date: "2026-07-31", type: "deadline" },
+  { id: "6", title: "sync_reports + automation health", date: "2026-07-20", type: "deploy" },
+  { id: "7", title: "Pipeline: Real Seguros / Fisio", date: "2026-07-25", type: "meeting" },
 ];
 
 export function getEventsForMonth(year: number, month: number): CalendarEvent[] {

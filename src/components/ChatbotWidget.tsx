@@ -100,7 +100,17 @@ export default function ChatbotWidget() {
       });
 
       const data = await resp.json();
-      setMessages(prev => [...prev, { role: "assistant", content: data.reply || "Error al obtener respuesta." }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          role: "assistant",
+          content:
+            (data.reply || "Error al obtener respuesta.") +
+            (data.groundedAt
+              ? `\n\n_(contexto vivo ${new Date(data.groundedAt).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" })})_`
+              : ""),
+        },
+      ]);
     } catch {
       setMessages(prev => [...prev, { role: "assistant", content: "Error de conexión. Intenta de nuevo." }]);
     } finally {
@@ -109,10 +119,10 @@ export default function ChatbotWidget() {
   };
 
   const quickCommands = [
-    { label: "🔥 Wuunder", cmd: "¿Cuál es el estado actual de Wuunder y próximos pasos?" },
-    { label: "📊 Predicción", cmd: "Resume el último reporte de predicciones del dashboard" },
-    { label: "💰 Runway", cmd: "¿Cuántos días de runway tenemos con $5M de capital?" },
-    { label: "🎯 Meta Q3", cmd: "¿Qué falta para cerrar 3 clientes en Q3 2026?" },
+    { label: "🔥 Wuunder", cmd: "Con el contexto vivo: ¿estado de Wuunder, días al deadline y próximo paso concreto?" },
+    { label: "📊 Predicción", cmd: "Resume el último reporte de predicciones del índice (números del contexto)." },
+    { label: "💰 Runway", cmd: "¿Cuántos días/meses de runway tenemos según capital y burn del contexto vivo?" },
+    { label: "🎯 Hoy", cmd: "¿Qué debo hacer hoy para avanzar Q3 (3 clientes) según pipeline interno y KPIs?" },
   ];
 
   if (!isOpen) {

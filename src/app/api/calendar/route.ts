@@ -1,44 +1,100 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import { getBusinessContext } from "@/data/businessContext";
 
-// Google Calendar API (Free Tier: 1,000,000 queries/day)
-// Configuración requerida en .env.local:
-// - GOOGLE_CALENDAR_CLIENT_ID: OAuth2 Client ID
-// - GOOGLE_CALENDAR_CLIENT_SECRET: OAuth2 Client Secret
-// - GOOGLE_CALENDAR_REFRESH_TOKEN: Refresh Token (obtenido después del primer OAuth flow)
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
+function weekdayEs(d: Date): string {
+  return d.toLocaleDateString("es-CO", { weekday: "long" });
+}
+
+/** DEMO calendar seeded with MiroFish + Wuunder when OAuth is missing. */
+function buildDemoCalendar() {
+  const ctx = getBusinessContext();
+  const now = new Date();
+  const deadline = new Date(ctx.wuunderDeadline);
+
+  const today = [
+    { id: "mf-am", time: "05:00", title: "MiroFish — Predicciones + Estratégico", type: "report", color: "var(--ember)" },
+    { id: "mf-pm", time: "17:00", title: "MiroFish — regeneración PM", type: "report", color: "var(--ember)" },
+  ];
+
+  if (ctx.wuunderDaysLeft <= 14) {
+    today.push({
+      id: "wuunder-focus",
+      time: "10:00",
+      title: `Wuunder — seguimiento firma (${ctx.wuunderDaysLeft}d)`,
+      type: "deadline",
+      color: "var(--danger)",
+    });
+  }
+
+  const tomorrow = [
+    { id: "pipeline", time: "09:30", title: "Pipeline interno: Real Seguros / Fisio", type: "meeting", color: "var(--warning)" },
+    { id: "sync", time: "18:15", title: "sync_reports.ps1 + health /api/automation", type: "deploy", color: "var(--success)" },
+  ];
+
+  const thisWeek: Array<{ id: string; day: string; title: string; type: string; color: string }> = [
+    {
+      id: "wuunder-dl",
+      day: weekdayEs(deadline),
+      title: `Deadline Wuunder (${ctx.wuunderDeadline})`,
+      type: "deadline",
+      color: "var(--danger)",
+    },
+    {
+      id: "mirofish-loop",
+      day: weekdayEs(now),
+      title: "Loop MiroFish confiable (generate → sync → deploy)",
+      type: "report",
+      color: "var(--ember)",
+    },
+  ];
+
+  return {
+    configured: false,
+    demo: true,
+    message:
+      "Google Calendar DEMO. Configura GOOGLE_CALENDAR_CLIENT_ID / SECRET / REFRESH_TOKEN en Vercel para datos reales.",
+    cta: {
+      label: "Configurar OAuth Calendar",
+      docs: "Ver .env.example — GOOGLE_CALENDAR_*",
+    },
+    business: {
+      wuunderDeadline: ctx.wuunderDeadline,
+      wuunderDaysLeft: ctx.wuunderDaysLeft,
+      runwayDays: ctx.runwayDays,
+    },
+    today,
+    tomorrow,
+    thisWeek,
+  };
+}
+
+export async function GET() {
   try {
     const clientId = process.env.GOOGLE_CALENDAR_CLIENT_ID;
     const clientSecret = process.env.GOOGLE_CALENDAR_CLIENT_SECRET;
+    const refreshToken = process.env.GOOGLE_CALENDAR_REFRESH_TOKEN;
 
-    if (!clientId || !clientSecret) {
-      // Return simulated data when credentials are not configured
-      const now = new Date();
-      const data = {
-        configured: false,
-        message: "Google Calendar no está configurado. Agrega GOOGLE_CALENDAR_CLIENT_ID y GOOGLE_CALENDAR_CLIENT_SECRET en .env.local",
-        today: [
-          { id: "1", time: "05:00", title: "Reporte de Predicciones", type: "report", color: "var(--accent)" },
-          { id: "2", time: "05:00", title: "Reporte Estratégico", type: "report", color: "var(--accent)" },
-          { id: "3", time: "17:00", title: "Reporte de Predicciones (PM)", type: "report", color: "var(--accent)" },
-          { id: "4", time: "17:00", title: "Reporte Estratégico (PM)", type: "report", color: "var(--accent)" },
-        ],
-        tomorrow: [
-          { id: "5", time: "09:00", title: "Sprint Planning", type: "meeting", color: "var(--warning)" },
-          { id: "6", time: "15:00", title: "Deploy Review", type: "deploy", color: "var(--success)" },
-        ],
-        thisWeek: [
-          { id: "7", day: "Viernes", title: "Cierre Mensual Q2", type: "deadline", color: "var(--danger)" },
-          { id: "8", day: "Sábado", title: "Backup Data", type: "deploy", color: "var(--success)" },
-        ],
-      };
-      return NextResponse.json(data);
+    if (!clientId || !clientSecret || !refreshToken) {
+      return NextResponse.json(buildDemoCalendar());
     }
 
-    // Real Google Calendar API call would go here
-    // For now, return simulated data
-    return NextResponse.json({ configured: true, message: "Google Calendar API no implementada aún" });
-  } catch (error) {
+    // OAuth presente pero integración Google Calendar aún no cableada a API live
+    const demo = buildDemoCalendar();
+    return NextResponse.json({
+      ...demo,
+      configured: true,
+      demo: true,
+      message:
+        "Credenciales Calendar detectadas; sync live pendiente. Mostrando agenda operativa (MiroFish/Wuunder).",
+      cta: {
+        label: "Implementar sync live (Sprint 3+)",
+        docs: "GOOGLE_CALENDAR_* ya en env",
+      },
+    });
+  } catch {
     return NextResponse.json({ error: "Internal error" }, { status: 500 });
   }
 }
