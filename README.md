@@ -110,10 +110,30 @@ Sin `GOOGLE_CALENDAR_*` completos, `#google-calendar` y `#calendar-widget` muest
 
 ### Google Calendar en Vercel (live)
 
-1. Google Cloud Console → habilitar **Google Calendar API**.
-2. Crear OAuth client (Desktop o Web) y obtener refresh token para `rraliadosteam@gmail.com` con scope `https://www.googleapis.com/auth/calendar.readonly`.
-3. En Vercel (Production): `GOOGLE_CALENDAR_CLIENT_ID`, `GOOGLE_CALENDAR_CLIENT_SECRET`, `GOOGLE_CALENDAR_REFRESH_TOKEN` (+ opcional `GOOGLE_CALENDAR_ID`).
-4. Redeploy. Verificar `GET /api/calendar` → `"live": true, "demo": false`.
+**Script asistido (recomendado):**
+
+```powershell
+cd skill-orchestrator-dashboard
+.\scripts\setup_google_live.ps1 -PushToVercel
+vercel deploy --prod --yes
+```
+
+Pasos en Google Cloud (una vez):
+
+1. Habilitar **Google Calendar API**.
+2. Pantalla de consentimiento OAuth + usuario de prueba `rraliadosteam@gmail.com`.
+3. Credenciales → OAuth client **Desktop** (o Web) con redirect `http://127.0.0.1:8765/`.
+4. Ejecutar el script arriba (abre el navegador, guarda `.env.local` y opcionalmente sube a Vercel).
+5. Verificar `GET /api/calendar` → `"live": true, "demo": false`.
+
+### Google Analytics GA4 (live)
+
+No se puede automatizar sin tu JSON de service account:
+
+1. Cloud Console → Service Account → Key JSON.
+2. GA4 → Admin → Property Access → añadir `client_email` como **Viewer**.
+3. Vercel Production: `GOOGLE_ANALYTICS_PROPERTY_ID` + `GOOGLE_SERVICE_ACCOUNT_KEY` (JSON en una línea).
+4. `vercel deploy --prod --yes` → `GET /api/analytics` sin badge DEMO.
 
 Sin credenciales, GA/Calendar/Metricool muestran badge **DEMO/Mock**. Sin `MIROFISH_WEBHOOK_URL`, Regenerar copia comandos al clipboard.
 
