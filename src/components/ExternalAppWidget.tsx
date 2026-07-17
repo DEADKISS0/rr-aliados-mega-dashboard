@@ -6,7 +6,7 @@ import type { EcosystemApp } from "@/data/ecosystemApps";
 
 type LoadState = "loading" | "loaded" | "timeout" | "error" | "card";
 
-const LOAD_TIMEOUT_MS = 8000;
+const LOAD_TIMEOUT_MS = 20000;
 
 interface Props {
   app: EcosystemApp;

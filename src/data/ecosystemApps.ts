@@ -4,10 +4,10 @@ export interface EcosystemApp {
   url: string;
   icon: string;
   blurb: string;
-  /** Prefer deep-link chip in the quick row */
+  /** Prefer deep-link chip in the quick row; implies card-first when embed is slow/blocked */
   deepLinkPrimary?: boolean;
   /**
-   * iframe = try embed; card = preview card only (X-Frame / login walls).
+   * iframe = try embed; card = preview card only (X-Frame / login / slow hosts).
    * auto = try iframe, fall back to card on timeout.
    */
   embed: "iframe" | "card" | "auto";
@@ -19,15 +19,16 @@ export const ECOSYSTEM_APPS: EcosystemApp[] = [
     title: "Company Hub",
     url: "https://x3hlysjfyb4ta.kimi.page/",
     icon: "🏢",
-    blurb: "Hub interno RR · playbooks y operaciones",
-    embed: "auto",
+    blurb: "Hub interno RR · Kimi (~23s) — link only, sin iframe",
+    deepLinkPrimary: true,
+    embed: "card",
   },
   {
     id: "cotizador",
     title: "RR Cotizador",
     url: "https://rr-kotizador.vercel.app/",
     icon: "🧮",
-    blurb: "Cotizaciones comerciales · deep-link preferido",
+    blurb: "Cotizaciones comerciales",
     deepLinkPrimary: true,
     embed: "auto",
   },
@@ -36,7 +37,7 @@ export const ECOSYSTEM_APPS: EcosystemApp[] = [
     title: "Altruismo",
     url: "https://altruismo-web.vercel.app/es",
     icon: "🤝",
-    blurb: "Web Altruismo · frame-ancestors permite Mega Dashboard",
+    blurb: "Embed OK en prod mega-dashboard (frame-ancestors)",
     embed: "iframe",
   },
   {
@@ -53,8 +54,9 @@ export const ECOSYSTEM_APPS: EcosystemApp[] = [
     title: "Adquisición Clientes",
     url: "https://3mpm6kcgvmpz4.kimi.page/#panel",
     icon: "📈",
-    blurb: "Playbook de adquisición · Kimi page",
-    embed: "auto",
+    blurb: "Playbook adquisición · Kimi — link only",
+    deepLinkPrimary: true,
+    embed: "card",
   },
   {
     id: "adq-talentos",
@@ -68,9 +70,10 @@ export const ECOSYSTEM_APPS: EcosystemApp[] = [
   {
     id: "dashweb",
     title: "DashWeb Core",
-    url: "https://dashweb-core-frontend-beta.up.railway.app/login",
+    url: "https://dashweb-core-frontend-beta.up.railway.app/",
     icon: "🔧",
-    blurb: "Core operativo · requiere login (sin iframe útil)",
+    blurb: "Core operativo · auth no funciona en iframe",
+    deepLinkPrimary: true,
     embed: "card",
   },
   {
