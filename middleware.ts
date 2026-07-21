@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   AUTH_COOKIE,
+  apiAllowed,
   authConfigured,
-  roleAllowsApi,
   verifyRoleCookie,
-  type DashboardRole,
+  type AccessRole,
 } from "@/lib/auth";
 
 export async function middleware(request: NextRequest) {
@@ -21,6 +21,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // NOTA DE SEGURIDAD: sin AUTH_SECRET el dashboard queda totalmente abierto
+  // (modo dev/local). En Vercel SIEMPRE debe existir AUTH_SECRET; ahí aplica el
+  // modelo por niveles de abajo.
   if (!authConfigured()) {
     return NextResponse.next();
   }
@@ -28,21 +31,19 @@ export async function middleware(request: NextRequest) {
   const secret = process.env.AUTH_SECRET!.trim();
   const session = await verifyRoleCookie(request.cookies.get(AUTH_COOKIE)?.value, secret);
 
-  if (!session) {
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json({ error: "No autenticado", login: "/login" }, { status: 401 });
-    }
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
-  }
+  // Sin sesión = visitante público. NUNCA lo mandamos a /login: ve el showcase.
+  // El rol efectivo solo restringe qué APIs sensibles puede consumir y qué
+  // widgets renderiza el cliente (via data-rr-tier).
+  const role: AccessRole = session ? session.role : "public";
 
-  const role = session.role as DashboardRole;
-  if (pathname.startsWith("/api/") && !roleAllowsApi(role, pathname)) {
+  if (pathname.startsWith("/api/") && !apiAllowed(role, pathname)) {
     return NextResponse.json(
-      { error: "Forbidden para rol", role, path: pathname },
-      { status: 403 }
+      {
+        error: role === "public" ? "Requiere iniciar sesión" : "Forbidden para rol",
+        role,
+        login: "/login",
+      },
+      { status: role === "public" ? 401 : 403 }
     );
   }
 
@@ -52,5 +53,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)"],
+  // Excluimos _next y TODO archivo estático con extensión (imágenes, y en especial
+  // PDF/XLSX/CSV de los reportes). Sin esto el middleware corría en cada descarga y
+  // en cada Range request del visor de PDF, lo que puede provocar errores de Vercel.
+  matcher: [
+    "/((?!_next/static|_next/image|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|pdf|xlsx|xls|csv|txt|woff|woff2|map)$).*)",
+  ],
 };

@@ -8,6 +8,7 @@ const SENSITIVE_API_PREFIXES = [
   "/api/regenerate",
   "/api/chat",
   "/api/metricool",
+  "/api/dashweb/users",
 ];
 
 export function authConfigured(): boolean {
@@ -102,4 +103,47 @@ export function resolveRoleFromPassword(password: string): DashboardRole | null 
 
 export function roleForcesPitch(role: DashboardRole): boolean {
   return role === "pitch" || role === "client";
+}
+
+// ── Modelo de acceso por niveles ──────────────────────────────────────────
+// public  = visitante sin sesión → solo showcase (desarrollos + ejemplos).
+// client/pitch (secretario) = sesión limitada → showcase + operación (sin ops).
+// ops = admin → todo.
+export type AccessRole = DashboardRole | "public";
+
+// APIs accesibles SIN sesión (las que alimentan el showcase público).
+const PUBLIC_API_PREFIXES = [
+  "/api/analytics",
+  "/api/news",
+  "/api/ecosystem",
+  "/api/automation",
+];
+
+// APIs SOLO para ops (admin). El resto de APIs no-públicas quedan disponibles
+// para secretario (client/pitch) y ops.
+const OPS_ONLY_API_PREFIXES = [
+  "/api/dashweb/users",
+  "/api/pipeline",
+  "/api/chat",
+  "/api/regenerate",
+  "/api/metricool",
+  "/api/generate-pdf",
+];
+
+function matchesPrefix(pathname: string, prefixes: string[]): boolean {
+  return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+}
+
+export function apiAllowed(role: AccessRole, pathname: string): boolean {
+  if (!pathname.startsWith("/api/")) return true;
+  if (role === "ops") return true;
+  if (role === "public") return matchesPrefix(pathname, PUBLIC_API_PREFIXES);
+  // secretario (client/pitch): todo salvo lo marcado como ops-only.
+  return !matchesPrefix(pathname, OPS_ONLY_API_PREFIXES);
+}
+
+export function tierForRole(role: AccessRole): "public" | "auth" | "ops" {
+  if (role === "ops") return "ops";
+  if (role === "public") return "public";
+  return "auth";
 }
