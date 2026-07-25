@@ -1,44 +1,24 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import WidgetCard from "@/components/ui/WidgetCard";
-import ReportSelector from "@/components/ui/ReportSelector";
 import RegenerarReportButton from "@/components/ui/RegenerarReportButton";
-import ReportViewer from "@/components/ui/ReportViewer";
-
-interface EstrategicoEntry {
-  date: string;
-  label?: string;
-  pdf: string;
-  excel: string;
-  heuristic?: boolean;
-  summary?: {
-    progreso?: string;
-    acciones?: number;
-    urgentes?: number;
-    quality?: "verified" | "rejected";
-    mode?: "ai_verified" | "deterministic_evidence";
-  };
-}
+import ReportHistorySelector from "@/components/ui/ReportHistorySelector";
+import type { ReportEntry } from "@/components/ui/ReportHistorySelector";
 
 export default function ReportesEstrategicosWidget() {
-  const [reports, setReports] = useState<EstrategicoEntry[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [reports, setReports] = useState<ReportEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<string>("");
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  const selectedReport = reports[selectedIndex] ?? null;
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchReports = useCallback(() => {
-    fetch("/reports/estrategicos_index.json")
+    fetch("/api/optimizacion-index")
       .then((r) => r.json())
       .then((data) => {
-        const list: EstrategicoEntry[] = (data.reports || []).map((r: EstrategicoEntry) => ({
+        const list: ReportEntry[] = (data.reports || []).map((r: ReportEntry) => ({
           ...r,
-          heuristic: r.summary?.quality === "rejected" || r.label?.toLowerCase().includes("heuríst") || false,
         }));
         setReports(list);
-        setSelectedIndex(0);
         setLastUpdate(new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }));
       })
       .catch(() => setReports([]))
@@ -47,100 +27,92 @@ export default function ReportesEstrategicosWidget() {
 
   useEffect(() => {
     fetchReports();
-    const interval = setInterval(fetchReports, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, [refreshKey, fetchReports]);
+    intervalRef.current = setInterval(fetchReports, 5 * 60 * 1000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [fetchReports]);
+
+  const handleRefresh = useCallback(() => {
+    setLoading(true);
+    fetchReports();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(fetchReports, 5 * 60 * 1000);
+  }, [fetchReports]);
 
   if (loading && reports.length === 0) {
     return (
-      <WidgetCard title="Optimización Estratégica" icon="🎯">
-        <div className="skeleton-ember h-8 w-48 mb-3" />
+      <WidgetCard title="Optimizacion Estrategica" icon="🎯">
+        <div className="skeleton-ember h-8 w-40 mb-2" />
         <div className="skeleton-ember rounded-lg" style={{ height: 480 }} />
       </WidgetCard>
     );
   }
 
-  const archivedCount = Math.max(0, reports.length - 3);
-
   return (
     <WidgetCard
-      title="Optimización Estratégica"
+      title="Optimizacion Estrategica"
       icon="🎯"
-      badge={archivedCount > 0 ? `${reports.length} (${archivedCount} arch.)` : `${reports.length} reportes`}
-      badgeVariant="active"
+      badge={reports.length > 0 ? `${reports.length} versiones` : "Sin datos"}
+      badgeVariant={reports.length > 0 ? "active" : "support"}
       action={
         <div className="flex items-center gap-1">
-          <RegenerarReportButton variant="estrategicos" />
+          <RegenerarReportButton variant="optimizacion" />
           <button
-            onClick={() => setRefreshKey((k) => k + 1)}
+            onClick={handleRefresh}
             className="btn-ghost !py-1 !px-2"
             title="Actualizar"
-            aria-label="Actualizar reportes estratégicos"
+            aria-label="Actualizar optimizacion"
           >
             ↻
           </button>
         </div>
       }
     >
-      <div className="flex items-center gap-2 mb-2 flex-wrap">
-        {selectedReport?.heuristic ? (
-          <span className="skill-badge heuristic">Heurístico</span>
-        ) : selectedReport?.summary?.mode === "deterministic_evidence" ? (
-          <span className="skill-badge context">Evidencia verificable</span>
-        ) : selectedReport ? (
-          <span className="skill-badge active">IA</span>
-        ) : null}
-        <span className="font-mono-label text-[10px]" style={{ color: "var(--text-muted)" }}>
-          {selectedReport?.label || "Sin reporte"}
-          {lastUpdate ? ` · ${lastUpdate}` : ""}
-        </span>
-      </div>
-
-      <ReportSelector
-        reports={reports}
-        selectedDate={selectedReport?.date ?? null}
-        onSelect={setSelectedIndex}
-        maxRecent={3}
-      />
-
-      {selectedReport?.summary && (
-        <div className="grid grid-cols-3 gap-1.5 mb-3">
-          {[
-            { label: "Progreso", value: selectedReport.summary.progreso, color: "var(--ember)" },
-            { label: "Acciones", value: selectedReport.summary.acciones, color: "var(--warning)" },
-            { label: "Urgentes", value: selectedReport.summary.urgentes, color: "var(--danger)" },
-          ].map((m) => (
-            <div
-              key={m.label}
-              className="py-1.5 px-1 rounded text-center"
-              style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-subtle)" }}
-            >
-              <div className="font-display text-base leading-none" style={{ color: m.color }}>
-                {m.value ?? "—"}
-              </div>
-              <div className="text-[9px] mt-0.5 font-mono-label" style={{ color: "var(--text-muted)" }}>
-                {m.label}
-              </div>
-            </div>
-          ))}
+      {loading && reports.length > 0 && (
+        <div className="text-[10px] text-center py-1 mb-1 animate-pulse" style={{ color: "var(--ember)" }}>
+          Actualizando...
         </div>
       )}
-
-      {selectedReport && (
-        <ReportViewer
-          key={selectedReport.date}
-          pdf={selectedReport.pdf}
-          excel={selectedReport.excel}
-          title={`Estratégico ${selectedReport.label || selectedReport.date}`}
-          defaultOpen
-        />
-      )}
-
-      {!selectedReport && (
+      {reports.length === 0 ? (
         <div className="py-4 text-center" style={{ color: "var(--text-muted)" }}>
-          <p className="text-xs mb-2">No hay reportes estratégicos aún.</p>
-          <RegenerarReportButton variant="estrategicos" />
+          <p className="text-xs mb-2">Sin reportes de optimizacion. Genera con MiroFish-Lite.</p>
+          <RegenerarReportButton variant="optimizacion" />
         </div>
+      ) : (
+        <ReportHistorySelector
+          reports={reports}
+          maxItems={5}
+          variantName="Optimizacion Estrategica"
+          renderSummary={(report) => {
+            const s = report.summary as Record<string, number | undefined>;
+            if (!s) return null;
+            const items = [
+              { label: "Score", value: s.health_score, color: "var(--success)" },
+              { label: "Riesgos", value: s.risks, color: "var(--danger)" },
+              { label: "Oport.", value: s.opportunities, color: "var(--amber)" },
+              { label: "Acciones", value: s.next_actions, color: "var(--ember)" },
+            ];
+            return (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-1.5 mb-2">
+                {items.map((m) => (
+                  <div
+                    key={m.label}
+                    className="py-1.5 px-1 rounded text-center"
+                    style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-subtle)" }}
+                  >
+                    <div className="font-display text-base leading-none" style={{ color: m.color }}>
+                      {m.value ?? "--"}
+                    </div>
+                    <div className="text-[9px] mt-0.5 font-mono-label" style={{ color: "var(--text-muted)" }}>
+                      {m.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          }}
+        />
       )}
     </WidgetCard>
   );

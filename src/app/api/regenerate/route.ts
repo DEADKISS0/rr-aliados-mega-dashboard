@@ -4,7 +4,7 @@ import { REGENERAR_INSTRUCTIONS, type ReportRegenerarVariant } from "@/data/rege
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const VARIANTS: ReportRegenerarVariant[] = ["predicciones", "estrategicos"];
+const VARIANTS: ReportRegenerarVariant[] = ["predicciones", "optimizacion"];
 
 export async function POST(req: NextRequest) {
   let body: { variant?: string };
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   const variant = body.variant as ReportRegenerarVariant | undefined;
   if (!variant || !VARIANTS.includes(variant)) {
     return NextResponse.json(
-      { ok: false, error: "variant debe ser predicciones | estrategicos" },
+      { ok: false, error: "variant debe ser predicciones u optimizacion" },
       { status: 400 }
     );
   }
@@ -44,12 +44,12 @@ export async function POST(req: NextRequest) {
 
       if (!resp.ok) {
         const text = await resp.text().catch(() => "");
+        console.error(`[regenerate] webhook HTTP ${resp.status}: ${text.slice(0, 200)}`);
         return NextResponse.json(
           {
             ok: false,
             mode: "webhook",
             error: `Webhook HTTP ${resp.status}`,
-            detail: text.slice(0, 200),
             instructions: REGENERAR_INSTRUCTIONS[variant],
           },
           { status: 502 }
@@ -63,11 +63,12 @@ export async function POST(req: NextRequest) {
         message: "Webhook MiroFish disparado. Tras generar, ejecuta sync_reports.ps1 y redeploy.",
       });
     } catch (e) {
+      console.error("[regenerate] webhook request failed:", e);
       return NextResponse.json(
         {
           ok: false,
           mode: "webhook",
-          error: e instanceof Error ? e.message : "Webhook falló",
+          error: "No se pudo contactar el webhook de MiroFish.",
           instructions: REGENERAR_INSTRUCTIONS[variant],
         },
         { status: 502 }
