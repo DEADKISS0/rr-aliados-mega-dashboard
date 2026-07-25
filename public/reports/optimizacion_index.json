@@ -1,0 +1,15 @@
+{
+  "reports": [
+    {
+      "date": "2026-07-24_2020",
+      "label": "2026-07-24 20:20",
+      "pdf": "/reports/Reporte_Optimizacion_2026-07-24_2020.pdf",
+      "summary": {
+        "health_score": null,
+        "risks": null,
+        "opportunities": null,
+        "next_actions": null
+      }
+    }
+  ]
+}
