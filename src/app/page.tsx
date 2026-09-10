@@ -43,7 +43,7 @@ import SkillFromMastersWidget from "@/components/SkillFromMastersWidget";
 import SkillInstallerWidget from "@/components/SkillInstallerWidget";
 import SkillOrchestratorWidget from "@/components/SkillOrchestratorWidget";
 import SuperpowersWidget from "@/components/SuperpowersWidget";
-import WarpgrepsWidget from "@/components/WarpgrepWidget";
+import WarpgrepWidget from "@/components/WarpgrepWidget";
 import WritingPlansWidget from "@/components/WritingPlansWidget";
 import XPublisherWidget from "@/components/XPublisherWidget";
 import YouTubeClipperWidget from "@/components/YouTubeClipperWidget";
@@ -52,7 +52,7 @@ import ConsultaContextoWidget from "@/components/ConsultaContextoWidget";
 import SkillsCatalogWidget from "@/components/SkillsCatalogWidget";
 import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
 import MiroFishSignalsWidget from "@/components/MiroFishSignalsWidget";
-import ReportesEstrategicosWidget from "@/components/ReportesEstrategicosWidget";
+import ReporteOptimizacionesWidget from "@/components/ReporteOptimizacionesWidget";
 import ActionProposalWidget from "@/components/ActionProposalWidget";
 import ReportInsightBoard from "@/components/ReportInsightBoard";
 import SalesPipelineWidget from "@/components/SalesPipelineWidget";
@@ -136,7 +136,7 @@ export default function Home() {
               <MiroFishReportsWidget />
             </div>
             <div id="estrategia" className="col-6">
-              <ReportesEstrategicosWidget />
+              <ReporteOptimizacionesWidget />
             </div>
             <div id="report-insights" className="col-12">
               <ReportInsightBoard />
@@ -306,7 +306,7 @@ export default function Home() {
                 </div>
                 <div id="warpgrep">
                   <ShellSkillCard title="Warpgrep" skillSlug="warpgrep" icon="📡">
-                    <WarpgrepsWidget />
+                    <WarpgrepWidget />
                   </ShellSkillCard>
                 </div>
               </CollapsibleSection>
