@@ -1,30 +1,9 @@
 import { NextResponse } from "next/server";
-
-const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, "");
-const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || "";
+import { fetchSupabaseRows, SupabaseConfigError } from "@/lib/supabaseRest";
 
 export async function GET() {
   try {
-    if (!SUPABASE_URL || !SUPABASE_KEY) {
-      return NextResponse.json(
-        { error: "Supabase no configurado", live: false },
-        { status: 503 }
-      );
-    }
-
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/demos?select=*&order=created_at.desc`, {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-      },
-      cache: "no-store",
-    });
-
-    if (!res.ok) {
-      throw new Error(`Supabase error: ${res.status}`);
-    }
-
-    const data = await res.json();
+    const data = await fetchSupabaseRows("demos", "select=*&order=created_at.desc");
 
     return NextResponse.json({
       demos: data,
@@ -33,6 +12,9 @@ export async function GET() {
       updated_at: new Date().toISOString(),
     });
   } catch (error) {
+    if (error instanceof SupabaseConfigError) {
+      return NextResponse.json({ error: error.message, live: false }, { status: 503 });
+    }
     console.error("Demos API error:", error);
     return NextResponse.json(
       { error: "Error consultando demos", live: false },
