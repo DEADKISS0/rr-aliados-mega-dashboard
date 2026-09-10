@@ -2,7 +2,30 @@
 import { useState, useEffect, useCallback } from "react";
 import WidgetCard from "@/components/ui/WidgetCard";
 import StatPill from "@/components/ui/StatPill";
-import { deals as staticDeals, salesMetrics as staticMetrics, revenueScenarios as staticScenarios, Deal, SalesMetric } from "@/data/salesPipeline";
+
+interface Project {
+  id: string;
+  slug: string;
+  nombre: string;
+  categoria: string;
+  estado: string;
+  fase: string;
+  valor_total: number;
+  valor_pagado: number;
+  valor_potencial: number;
+  servicios_potenciales: string[];
+  updated_at: string;
+}
+
+interface ProjectsStats {
+  total: number;
+  activos: number;
+  prospectos: number;
+  clientes: number;
+  valor_total: number;
+  valor_pagado: number;
+  valor_potencial: number;
+}
 
 const statusColors: Record<string, string> = {
   prospecto: "var(--warning)",
@@ -10,6 +33,8 @@ const statusColors: Record<string, string> = {
   "pre-contrato": "var(--success)",
   contratado: "var(--success)",
   activo: "var(--success)",
+  planificacion: "var(--info)",
+  pausado: "var(--danger)",
 };
 
 const statusLabels: Record<string, string> = {
@@ -18,111 +43,163 @@ const statusLabels: Record<string, string> = {
   "pre-contrato": "Pre-contrato",
   contratado: "Contratado",
   activo: "Activo",
+  planificacion: "Planificación",
+  pausado: "Pausado",
 };
 
-const priorityColors: Record<string, string> = {
-  critico: "var(--danger)",
-  alto: "var(--warning)",
-  medio: "var(--ember)",
+const categoryLabels: Record<string, string> = {
+  cliente: "Cliente",
+  prospecto: "Prospecto",
+  interno: "Interno",
 };
+
+function formatCOP(value: number): string {
+  if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `$${(value / 1000).toFixed(0)}K`;
+  return `$${value}`;
+}
 
 export default function SalesPipelineWidget() {
-  const [deals, setDeals] = useState<Deal[]>(staticDeals);
-  const [metrics, setMetrics] = useState<SalesMetric[]>(staticMetrics);
-  const [scenarios, setScenarios] = useState(staticScenarios);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [stats, setStats] = useState<ProjectsStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [live, setLive] = useState(false);
   const [lastUpdate, setLastUpdate] = useState("");
 
-  const fetchPipeline = useCallback(async () => {
+  const fetchProjects = useCallback(async () => {
     try {
-      const resp = await fetch("/api/pipeline");
+      const resp = await fetch("/api/projects");
       const data = await resp.json();
-      if (data.deals) setDeals(data.deals);
-      if (data.metrics) setMetrics(data.metrics);
-      if (data.revenueScenarios) setScenarios(data.revenueScenarios);
-      setLastUpdate(new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }));
+      if (data.projects) {
+        setProjects(data.projects);
+        setStats(data.stats);
+        setLive(data.live);
+        setLastUpdate(new Date().toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit" }));
+      }
     } catch {
-      setDeals(staticDeals);
-      setMetrics(staticMetrics);
-      setScenarios(staticScenarios);
+      // Fallback silencioso — el widget muestra vacío si no hay datos
+      setLive(false);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchPipeline();
-  }, [fetchPipeline]);
+    fetchProjects();
+    const interval = setInterval(fetchProjects, 120000); // Refresh cada 2 min
+    return () => clearInterval(interval);
+  }, [fetchProjects]);
+
+  // Métricas calculadas desde datos vivos
+  const metrics = stats ? [
+    { label: "Pipeline Total", value: formatCOP(stats.valor_total + stats.valor_potencial), icon: "💰", color: "var(--success)" },
+    { label: "Clientes Activos", value: String(stats.clientes), icon: "👥", color: "var(--ember)" },
+    { label: "Prospectos", value: String(stats.prospectos), icon: "🎯", color: "var(--warning)" },
+    { label: "Cobrado", value: formatCOP(stats.valor_pagado), icon: "✅", color: "var(--success)" },
+  ] : [];
+
+  // Filtrar solo clientes y prospectos (no internos)
+  const visibleProjects = projects.filter((p) => p.categoria !== "interno");
+
+  if (loading) {
+    return (
+      <WidgetCard title="Pipeline de Ventas" icon="💰" badge="CARGANDO" badgeVariant="default">
+        <div className="text-center py-8 text-sm" style={{ color: "var(--text-secondary)" }}>
+          Consultando datos vivos…
+        </div>
+      </WidgetCard>
+    );
+  }
 
   return (
-    <WidgetCard title="Pipeline de Ventas" icon="💰" badge="CRÍTICO" badgeVariant="support">
+    <WidgetCard
+      title="Pipeline de Ventas"
+      icon="💰"
+      badge={live ? "EN VIVO" : "OFFLINE"}
+      badgeVariant={live ? "success" : "danger"}
+    >
+      {/* Métricas */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
         {metrics.map((m) => (
           <StatPill key={m.label} label={m.label} value={m.value} icon={m.icon} color={m.color} />
         ))}
       </div>
 
-      <div className="mb-4">
-        <div className="font-mono-label mb-2" style={{ color: "var(--text-primary)" }}>
-          Prospectos Activos
+      {/* Lista de proyectos */}
+      <div className="mb-2">
+        <div className="font-mono-label mb-2 flex items-center justify-between" style={{ color: "var(--text-primary)" }}>
+          <span>Proyectos ({visibleProjects.length})</span>
+          {lastUpdate && (
+            <span className="text-xs font-normal" style={{ color: "var(--text-secondary)" }}>
+              {lastUpdate}
+            </span>
+          )}
         </div>
-        <div className="space-y-2">
-          {deals.map((deal) => (
+        <div className="space-y-2 max-h-64 overflow-y-auto">
+          {visibleProjects.map((project) => (
             <div
-              key={deal.id}
+              key={project.id}
               className="p-3 rounded-lg"
               style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-subtle)" }}
             >
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full" style={{ background: statusColors[deal.status] }} />
+                  <div
+                    className="w-2 h-2 rounded-full"
+                    style={{ background: statusColors[project.estado] || "var(--text-secondary)" }}
+                  />
                   <span className="text-xs font-semibold" style={{ color: "var(--text-primary)" }}>
-                    {deal.name}
+                    {project.nombre}
+                  </span>
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{
+                      background: project.categoria === "cliente" ? "var(--success-bg)" : "var(--warning-bg)",
+                      color: project.categoria === "cliente" ? "var(--success)" : "var(--warning)",
+                    }}
+                  >
+                    {categoryLabels[project.categoria] || project.categoria}
                   </span>
                 </div>
-                <span
-                  className="text-[10px] px-1.5 py-0.5 rounded font-mono-label"
-                  style={{ background: `${priorityColors[deal.priority]}20`, color: priorityColors[deal.priority] }}
-                >
-                  {deal.priority}
+                <span className="text-xs font-mono" style={{ color: "var(--text-secondary)" }}>
+                  {formatCOP(project.valor_total)}
                 </span>
               </div>
-              <div className="flex flex-wrap items-center gap-3 text-[10px]" style={{ color: "var(--text-muted)" }}>
-                <span>{deal.value}</span>
-                <span>{deal.monthlyFee}</span>
-                <span>{deal.timeline}</span>
-                <span className="px-1 rounded" style={{ background: `${statusColors[deal.status]}20`, color: statusColors[deal.status] }}>
-                  {statusLabels[deal.status]}
+
+              <div className="flex items-center justify-between">
+                <span className="text-[10px]" style={{ color: "var(--text-secondary)" }}>
+                  {statusLabels[project.estado] || project.estado} · {project.fase || "Sin fase"}
                 </span>
+                {project.valor_pagado > 0 && (
+                  <span className="text-[10px] font-mono" style={{ color: "var(--success)" }}>
+                    {Math.round((project.valor_pagado / project.valor_total) * 100)}% pagado
+                  </span>
+                )}
               </div>
-              <div className="text-[10px] mt-1.5" style={{ color: "var(--text-secondary)" }}>
-                → {deal.nextStep}
-              </div>
+
+              {/* Barra de progreso de pago */}
+              {project.valor_total > 0 && (
+                <div className="mt-2 h-1 rounded-full" style={{ background: "var(--bg-tertiary)" }}>
+                  <div
+                    className="h-1 rounded-full transition-all"
+                    style={{
+                      width: `${Math.min(100, Math.round((project.valor_pagado / project.valor_total) * 100))}%`,
+                      background: "var(--success)",
+                    }}
+                  />
+                </div>
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      <div>
-        <div className="font-mono-label mb-2" style={{ color: "var(--text-primary)" }}>
-          Escenarios de Ingresos (12 meses)
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {scenarios.slice(0, 4).map((s) => (
-            <div
-              key={s.name}
-              className="p-2 rounded-lg text-center"
-              style={{ background: "var(--bg-secondary)", border: "1px solid var(--border-subtle)" }}
-            >
-              <div className="text-[10px] font-medium" style={{ color: "var(--text-primary)" }}>{s.name}</div>
-              <div className="text-xs font-display mt-1" style={{ color: "var(--ember)" }}>{s.revenue}</div>
-            </div>
-          ))}
-        </div>
+      {/* Footer con fuente */}
+      <div className="mt-3 pt-2 border-t" style={{ borderColor: "var(--border-subtle)" }}>
+        <span className="text-[10px] font-mono" style={{ color: "var(--text-secondary)" }}>
+          {live ? "📡 Supabase (tiempo real)" : "📁 Datos estáticos"}
+        </span>
       </div>
-
-      {lastUpdate && (
-        <div className="mt-3 text-[10px] text-right font-mono-label" style={{ color: "var(--text-muted)" }}>
-          Sync: {lastUpdate}
-        </div>
-      )}
     </WidgetCard>
   );
 }
