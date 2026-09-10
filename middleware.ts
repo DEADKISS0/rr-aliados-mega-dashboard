@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   AUTH_COOKIE,
-  apiAllowed,
+  roleAllowsApi,
   authConfigured,
   verifyRoleCookie,
   type AccessRole,
@@ -39,7 +39,7 @@ export async function middleware(request: NextRequest) {
   // widgets renderiza el cliente (via data-rr-tier).
   const role: AccessRole = session ? session.role : "public";
 
-  if (pathname.startsWith("/api/") && !apiAllowed(role, pathname)) {
+  if (pathname.startsWith("/api/") && !roleAllowsApi(role, pathname)) {
     return NextResponse.json(
       {
         error: role === "public" ? "Requiere iniciar sesión" : "Forbidden para rol",

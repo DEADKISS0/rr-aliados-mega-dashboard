@@ -1,0 +1,135 @@
+/* ── Elevator Theme (Light / Warm Parchment) ────────────────────────────────
+   Public showcase + client/pitch mode.
+   Applied via document.documentElement.dataset.theme === "elevator" */
+
+[data-theme="elevator"] {
+  /* ── Background surfaces ──────────────────────────────────────────────── */
+  --bg-primary: #F5F0EB;
+  --bg-secondary: #FFFFFF;
+  --bg-elevated: #FDFAF7;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: #FDF9F5;
+  --bg-glass: rgba(245, 240, 235, 0.88);
+
+  /* ── Text ─────────────────────────────────────────────────────────────── */
+  --text-primary: #0F0F0F;
+  --text-secondary: #3D3D3D;
+  --text-muted: #6B6B6B;
+
+  /* ── Borders ──────────────────────────────────────────────────────────── */
+  --border: #E0D8D0;
+  --border-subtle: #EDE8E2;
+  --border-accent: rgba(206, 61, 31, 0.25);
+
+  /* ── Shadows (subtle lift instead of dark voids) ──────────────────────── */
+  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-inset: inset 0 1px 0 rgba(0, 0, 0, 0.04);
+  --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-ember: 0 0 24px rgba(206, 61, 31, 0.2);
+  --shadow-ember-sm: 0 0 10px rgba(206, 61, 31, 0.18);
+
+  /* ── Ambient mesh (toned down for light) ──────────────────────────────── */
+  --mesh-ember: radial-gradient(ellipse 80% 60% at 85% 10%, rgba(206, 61, 31, 0.06) 0%, transparent 60%);
+  --mesh-void: radial-gradient(ellipse 60% 50% at 10% 90%, rgba(63, 0, 53, 0.04) 0%, transparent 55%);
+
+  /* ── Keep accent but adjust for readability on light ──────────────────── */
+  --ember-dark: #B8351A;
+  --ember-light: #E85A3A;
+
+  /* Keep opacity variants (they work on both bg) */
+  --ember-10: rgba(206, 61, 31, 0.08);
+  --ember-20: rgba(206, 61, 31, 0.15);
+  --ember-30: rgba(206, 61, 31, 0.25);
+  --ember-60: rgba(206, 61, 31, 0.5);
+
+  /* ── Void becomes a subtle dark accent, not background ────────────────── */
+  --void-30: rgba(63, 0, 53, 0.06);
+  --void-50: rgba(63, 0, 53, 0.12);
+  --void-95: rgba(63, 0, 53, 0.25);
+
+  /* ── Parchment & pitch swapped for light ──────────────────────────────── */
+  --parchment: #0F0F0F;
+  --parchment-5: rgba(15, 15, 15, 0.04);
+  --parchment-10: rgba(15, 15, 15, 0.08);
+  --parchment-15: rgba(15, 15, 15, 0.12);
+  --parchment-30: rgba(15, 15, 15, 0.25);
+  --parchment-50: rgba(15, 15, 15, 0.45);
+  --parchment-70: rgba(15, 15, 15, 0.6);
+  --pitch-80: rgba(15, 15, 15, 0.8);
+  --pitch-95: rgba(15, 15, 15, 0.95);
+
+  /* ── Success / warning preserved (adjust for contrast) ────────────────── */
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  /* ── Scrollbar (light) ────────────────────────────────────────────────── */
+  scrollbar-color: var(--text-muted) transparent;
+}
+
+/* ── Elevator-specific card adjustments ──────────────────────────────────── */
+[data-theme="elevator"] .card {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="elevator"] .card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-color: var(--ember-30);
+}
+
+[data-theme="elevator"] .glass-panel {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="elevator"] .stat-tile {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+}
+
+[data-theme="elevator"] .stat-tile:hover {
+  background: var(--bg-elevated);
+  border-color: var(--border-accent);
+}
+
+/* ── Elevator grid lines (visible on light) ─────────────────────────────── */
+[data-theme="elevator"] .dashboard-bg__grid {
+  opacity: 0.35;
+}
+
+/* ── Elevator table adjustments ─────────────────────────────────────────── */
+[data-theme="elevator"] .table-dark tr:hover td {
+  background: var(--ember-10);
+}
+
+/* ── Elevator badge adjustments ─────────────────────────────────────────── */
+[data-theme="elevator"] .skill-badge.active {
+  background: rgba(22, 163, 74, 0.12);
+  color: var(--success);
+}
+
+/* ── Elevator skeleton ──────────────────────────────────────────────────── */
+[data-theme="elevator"] .skeleton-shimmer {
+  background: linear-gradient(90deg, #EDE8E2 25%, var(--ember-10) 50%, #EDE8E2 75%);
+}
+
+/* ── Elevator nav items ─────────────────────────────────────────────────── */
+[data-theme="elevator"] .nav-item:hover {
+  background: var(--ember-10);
+}
+
+/* ── Elevator presentation mode bar ─────────────────────────────────────── */
+[data-theme="elevator"] [data-presentation="true"] ~ * [style*="background: var(--ember-20)"] {
+  /* Keep the pitch bar visible but slightly softer */
+}
+
+/* ── Elevator print ─────────────────────────────────────────────────────── */
+@media print {
+  [data-theme="elevator"] {
+    --bg-primary: #FFFFFF !important;
+    --text-primary: #0F0F0F !important;
+  }
+  [data-theme="elevator"] .card {
+    background: #FFFFFF !important;
+    border-color: #E0D8D0 !important;
+  }
+}

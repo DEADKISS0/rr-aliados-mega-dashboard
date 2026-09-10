@@ -13,7 +13,7 @@ import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
 import ReportInsightBoard from "@/components/ReportInsightBoard";
 import ActionProposalWidget from "@/components/ActionProposalWidget";
 import MiroFishSignalsWidget from "@/components/MiroFishSignalsWidget";
-import ReportesEstrategicosWidget from "@/components/ReportesEstrategicosWidget";
+import ReporteOptimizacionesWidget from "@/components/ReporteOptimizacionesWidget";
 import SalesPipelineWidget from "@/components/SalesPipelineWidget";
 import FinancialHealthWidget from "@/components/FinancialHealthWidget";
 import CalendarWidget from "@/components/CalendarWidget";
@@ -97,7 +97,7 @@ export default function DashboardShell() {
               <MiroFishReportsWidget />
             </div>
             <div id="estrategia" className="col-6">
-              <ReportesEstrategicosWidget />
+              <ReporteOptimizacionesWidget />
             </div>
             <div id="report-insights" className="col-12" data-vis="ops">
               <ReportInsightBoard />
