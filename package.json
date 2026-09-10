@@ -11,7 +11,7 @@
     "predeploy:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_ecosystem_embeds.ps1"
   },
   "dependencies": {
-    "next": "16.2.10",
+    "next": "^16.3.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
