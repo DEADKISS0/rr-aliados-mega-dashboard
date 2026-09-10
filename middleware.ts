@@ -10,6 +10,7 @@ import {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
+  // Rutas públicas (landing, login, APIs de auth, estáticos)
   if (
     pathname.startsWith("/api/auth") ||
     pathname.startsWith("/api/reports-index") ||
@@ -19,7 +20,8 @@ export async function middleware(request: NextRequest) {
     pathname.startsWith("/brand") ||
     pathname === "/favicon.ico" ||
     pathname === "/manifest.json" ||
-    pathname === "/login"
+    pathname === "/login" ||
+    pathname === "/"
   ) {
     return NextResponse.next();
   }
@@ -34,10 +36,21 @@ export async function middleware(request: NextRequest) {
   const secret = process.env.AUTH_SECRET!.trim();
   const session = await verifyRoleCookie(request.cookies.get(AUTH_COOKIE)?.value, secret);
 
-  // Sin sesión = visitante público. NUNCA lo mandamos a /login: ve el showcase.
-  // El rol efectivo solo restringe qué APIs sensibles puede consumir y qué
-  // widgets renderiza el cliente (via data-rr-tier).
+  // Sin sesión = visitante público.
   const role: AccessRole = session ? session.role : "public";
+
+  // Proteger rutas /ops: requieren sesión válida
+  if (pathname.startsWith("/ops")) {
+    if (!session) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("next", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+    // Rol pitch/client no puede acceder a /ops (solo ops)
+    if (role !== "ops") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
 
   if (pathname.startsWith("/api/") && !apiAllowed(role, pathname)) {
     return NextResponse.json(

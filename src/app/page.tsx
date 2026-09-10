@@ -1,322 +1,305 @@
-"use client";
-import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import Sidebar from "@/components/Sidebar";
-import Footer from "@/components/Footer";
-import HeroSection from "@/components/HeroSection";
-import DashboardBackground from "@/components/DashboardBackground";
-import SectionHeader from "@/components/ui/SectionHeader";
-import { useActiveWidgetHighlight } from "@/hooks/useActiveWidgetHighlight";
-import BusinessMetricsWidget from "@/components/BusinessMetricsWidget";
-import CalendarWidget from "@/components/CalendarWidget";
-import TaskMonitorWidget from "@/components/TaskMonitorWidget";
-import ChatbotWidget from "@/components/ChatbotWidget";
-import GoogleAnalyticsWidget from "@/components/GoogleAnalyticsWidget";
-import GoogleCalendarWidget from "@/components/GoogleCalendarWidget";
-import ExportWidget from "@/components/ExportWidget";
-import CollapsibleSection from "@/components/CollapsibleSection";
-import InterfaceDesigningWidget from "@/components/InterfaceDesigningWidget";
-import BenchmarkingWidget from "@/components/BenchmarkingWidget";
-import ExcelWidget from "@/components/ExcelWidget";
-import GoogleNewsWidget from "@/components/GoogleNewsWidget";
-import GoogleMapsWidget from "@/components/GoogleMapsWidget";
-import MetricoolWidget from "@/components/MetricoolWidget";
-import WebResearchWidget from "@/components/WebResearchWidget";
-import FirecrawlWidget from "@/components/FirecrawlWidget";
-import AmazonWidget from "@/components/AmazonWidget";
-import NotebookLMWidget from "@/components/NotebookLMWidget";
-import BrainstormingWidget from "@/components/BrainstormingWidget";
-import GrillMeWidget from "@/components/GrillMeWidget";
-import CronogramaWidget from "@/components/CronogramaWidget";
-import KarpathyWidget from "@/components/KarpathyWidget";
-import DebuggingWidget from "@/components/DebuggingWidget";
-import VerificationWidget from "@/components/VerificationWidget";
-import QAAuditorWidget from "@/components/QAAuditorWidget";
-import LoopModeWidget from "@/components/LoopModeWidget";
-import QualityLoopWidget from "@/components/QualityLoopWidget";
-import MCPWidget from "@/components/MCPWidget";
-import MultiAgentWidget from "@/components/MultiAgentWidget";
-import RemotionWidget from "@/components/RemotionWidget";
-import SkillBuilderWidget from "@/components/SkillBuilderWidget";
-import SkillCreatorWidget from "@/components/SkillCreatorWidget";
-import SkillFromMastersWidget from "@/components/SkillFromMastersWidget";
-import SkillInstallerWidget from "@/components/SkillInstallerWidget";
-import SkillOrchestratorWidget from "@/components/SkillOrchestratorWidget";
-import SuperpowersWidget from "@/components/SuperpowersWidget";
-import WarpgrepWidget from "@/components/WarpgrepWidget";
-import WritingPlansWidget from "@/components/WritingPlansWidget";
-import XPublisherWidget from "@/components/XPublisherWidget";
-import YouTubeClipperWidget from "@/components/YouTubeClipperWidget";
-import FindSkillsWidget from "@/components/FindSkillsWidget";
-import ConsultaContextoWidget from "@/components/ConsultaContextoWidget";
-import SkillsCatalogWidget from "@/components/SkillsCatalogWidget";
-import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
-import MiroFishSignalsWidget from "@/components/MiroFishSignalsWidget";
-import ReporteOptimizacionesWidget from "@/components/ReporteOptimizacionesWidget";
-import ActionProposalWidget from "@/components/ActionProposalWidget";
-import ReportInsightBoard from "@/components/ReportInsightBoard";
-import SalesPipelineWidget from "@/components/SalesPipelineWidget";
-import FinancialHealthWidget from "@/components/FinancialHealthWidget";
-import ClientStatusWidget from "@/components/ClientStatusWidget";
-import CompetitorWidget from "@/components/CompetitorWidget";
-import Meta5YearWidget from "@/components/Meta5YearWidget";
-import AutomationHealthWidget from "@/components/AutomationHealthWidget";
-import EcosystemAppsGrid from "@/components/EcosystemAppsGrid";
-import ShellSkillCard from "@/components/ui/ShellSkillCard";
+import Link from "next/link";
+import type { Metadata } from "next";
 
-const SIDEBAR_KEY = "rr-sidebar-collapsed";
+export const metadata: Metadata = {
+  title: "RR ALIADOS — Brutalismo Estratégico Colombiano",
+  description:
+    "Growth partner boutique. AI First. Resultados medibles. Estrategia, desarrollo, contenido y datos para hacer crecer tu negocio.",
+};
 
-export default function Home() {
-  const [activeWidget, setActiveWidget] = useState("All");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  useActiveWidgetHighlight(activeWidget);
+const DEVELOPMENTS = [
+  {
+    id: "mega-dashboard",
+    title: "Mega Dashboard",
+    description: "Centro de comando centralizado. Métricas, reportes IA, pipeline y skills en un solo lugar.",
+    url: "https://rr-aliados-mega-dashboard.vercel.app/",
+    icon: "🎯",
+    tags: ["nextjs", "ia", "dashboard"],
+  },
+  {
+    id: "rr-finanzas",
+    title: "RR Finanzas",
+    description: "Dashboard financiero en tiempo real. Caja, runway, cuentas de cobro y proyecciones.",
+    url: "https://rr-finanzas.vercel.app/",
+    icon: "💰",
+    tags: ["finanzas", "nextjs", "supabase"],
+  },
+  {
+    id: "rr-kotizador",
+    title: "RR Kotizador",
+    description: "Cotizador de servicios con precios dinámicos y cronogramas automáticos de pago.",
+    url: "https://rr-kotizador.vercel.app/",
+    icon: "🧮",
+    tags: ["ventas", "cotizador", "automatizacion"],
+  },
+  {
+    id: "primer-contacto",
+    title: "Primer Contacto Web",
+    description: "App de captura de prospectos: leads y registro de entrevistas estructuradas.",
+    url: "https://primer-contacto-web.vercel.app/",
+    icon: "📋",
+    tags: ["crm", "leads", "nextjs"],
+  },
+  {
+    id: "dashweb",
+    title: "DashWeb Core",
+    description: "ERP/CRM interno. Proyectos, tareas, RRHH, CRM, facturación y OKRs.",
+    url: "https://dashweb-core-frontend-beta.up.railway.app/login",
+    icon: "🔧",
+    tags: ["erp", "crm", "railway"],
+  },
+  {
+    id: "skills-hub",
+    title: "RR Skills Hub",
+    description: "Catálogo y gestión de skills de IA del equipo. 35+ skills orquestadas.",
+    url: "https://rr-skills-hub.vercel.app/",
+    icon: "📚",
+    tags: ["ia", "skills", "catalogo"],
+  },
+  {
+    id: "saas-vertical",
+    title: "SaaS Vertical Hub",
+    description: "CRM panaderías + pipeline + demos personalizadas. Backend Supabase.",
+    url: "https://rr-saas-vertical.vercel.app/",
+    icon: "🥐",
+    tags: ["saas", "crm", "supabase"],
+  },
+  {
+    id: "altruismo",
+    title: "Altruismo",
+    description: "Suite de herramientas web sin anuncios, creada por la comunidad.",
+    url: "https://altruismo-web.vercel.app/es",
+    icon: "🤝",
+    tags: ["comunidad", "herramientas", "web"],
+  },
+];
 
-  useEffect(() => {
-    try {
-      setSidebarCollapsed(localStorage.getItem(SIDEBAR_KEY) === "1");
-    } catch {
-      /* ignore */
-    }
-  }, []);
+const CLIENTS = [
+  { name: "Wuundeer", industry: "B2B Mayorista confección", status: "Prospecto", url: "https://wuundeer-prototype.vercel.app/" },
+  { name: "Satiro Sushi", industry: "Restaurante", status: "Cliente activo" },
+  { name: "BOGA", industry: "Panadería / SaaS", status: "Cliente activo", url: "https://junisama.com.co/" },
+  { name: "Siraitia", industry: "Agro exportación", status: "Prospecto" },
+  { name: "Real Seguros", industry: "Corredora seguros", status: "Prototipo", url: "https://real-seguros-web.vercel.app/" },
+  { name: "Café Angústula", industry: "Finca cafetera", status: "Prototipo", url: "https://augustula-cafe.vercel.app/" },
+];
 
-  const toggleSidebarCollapse = () => {
-    setSidebarCollapsed((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem(SIDEBAR_KEY, next ? "1" : "0");
-      } catch {
-        /* ignore */
-      }
-      return next;
-    });
-  };
-
+export default function LandingPage() {
   return (
-    <div className="flex flex-col h-screen relative" style={{ background: "var(--bg-primary)" }}>
-      <DashboardBackground />
-      <Header
-        onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
-        sidebarCollapsed={sidebarCollapsed}
-        onSidebarCollapseToggle={toggleSidebarCollapse}
-      />
-      <div className="flex flex-1 overflow-hidden relative z-10">
-        <Sidebar
-          activeWidget={activeWidget}
-          onSelect={setActiveWidget}
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          collapsed={sidebarCollapsed}
-          onCollapseToggle={toggleSidebarCollapse}
-        />
-        <main
-          className="flex-1 overflow-y-auto py-6"
-          style={{
-            paddingLeft: "var(--page-x)",
-            paddingRight: "var(--page-x)",
-            paddingBottom: "5rem",
-          }}
-        >
-          <div className="dashboard-grid">
-
-            {/* Zona 1 — Command Center */}
-            <HeroSection />
-            <div id="business-metrics" className="col-12">
-              <BusinessMetricsWidget />
-            </div>
-            <div className="col-12">
-              <Meta5YearWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 2 — Inteligencia IA */}
-            <SectionHeader number="01" title="Inteligencia IA" subtitle="Predicciones, estrategia y acciones verificables" />
-            <div id="mirofish-reports" className="col-6">
-              <MiroFishReportsWidget />
-            </div>
-            <div id="estrategia" className="col-6">
-              <ReporteOptimizacionesWidget />
-            </div>
-            <div id="report-insights" className="col-12">
-              <ReportInsightBoard />
-            </div>
-            <div id="action-proposals" className="col-12">
-              <ActionProposalWidget />
-            </div>
-            <div id="mirofish-signals" className="col-12">
-              <MiroFishSignalsWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 3 — Ecosistema */}
-            <SectionHeader number="02" title="Ecosistema" subtitle="Apps corporativas + deep-links accionables" />
-            <div className="col-12">
-              <EcosystemAppsGrid />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 4 — Negocio */}
-            <SectionHeader number="03" title="Negocio" subtitle="Pipeline comercial y salud financiera" />
-            <div id="sales-pipeline" className="col-6">
-              <SalesPipelineWidget />
-            </div>
-            <div id="financial-health" className="col-6">
-              <FinancialHealthWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 5 — Operaciones */}
-            <SectionHeader number="04" title="Operaciones" subtitle="Calendario, tareas y exportación" />
-            <div id="calendar-widget" className="col-4">
-              <CalendarWidget />
-            </div>
-            <div id="task-monitor" className="col-4" data-pitch-hide>
-              <TaskMonitorWidget />
-            </div>
-            <div id="export-widget" className="col-4" data-pitch-hide>
-              <ExportWidget />
-            </div>
-            <div id="automation-health" className="col-12" data-pitch-hide>
-              <AutomationHealthWidget />
-            </div>
-
-            <div className="section-divider" />
-
-            {/* Zona 6 — Growth */}
-            <SectionHeader number="05" title="Growth" subtitle="Analytics, clientes y competencia" />
-            <div id="google-analytics" className="col-3">
-              <GoogleAnalyticsWidget />
-            </div>
-            <div id="google-calendar" className="col-3">
-              <GoogleCalendarWidget />
-            </div>
-            <div id="client-status" className="col-3">
-              <ClientStatusWidget />
-            </div>
-            <div id="competitor-intel" className="col-3">
-              <CompetitorWidget />
-            </div>
-
-            <div className="section-divider" data-internal-only />
-
-            <div data-internal-only className="contents">
-              <SectionHeader
-                number="06"
-                title="Skills"
-                subtitle={activeWidget === "All" ? "Catálogo completo de skills instaladas" : `Vista: ${activeWidget}`}
-              />
-            </div>
-            <div id="skills-catalog" className="col-12" data-internal-only>
-              <SkillsCatalogWidget />
-            </div>
-
-            <div className="col-12 flex flex-col gap-4" data-internal-only>
-              <CollapsibleSection title="DATA & ANALYTICS" icon="📊" sectionId="data-analytics" defaultOpen={false}>
-                <div id="excel-widget"><ExcelWidget /></div>
-                <div id="google-news"><GoogleNewsWidget /></div>
-                <div id="google-maps"><GoogleMapsWidget /></div>
-                <div id="amazon-analyzer"><AmazonWidget /></div>
-                <div id="metricool"><MetricoolWidget /></div>
-              </CollapsibleSection>
-
-              <CollapsibleSection title="RESEARCH" icon="🔍" sectionId="research" defaultOpen={false}>
-                <div id="web-research"><WebResearchWidget /></div>
-                <div id="firecrawl"><FirecrawlWidget /></div>
-                <div id="notebooklm"><NotebookLMWidget /></div>
-              </CollapsibleSection>
-
-              <CollapsibleSection title="DEV & QA" icon="⚙️" sectionId="dev-qa" defaultOpen={false}>
-                <div id="karpathy-rules"><KarpathyWidget /></div>
-                <div id="debugging"><DebuggingWidget /></div>
-                <div id="verification"><VerificationWidget /></div>
-                <div id="qa-auditor"><QAAuditorWidget /></div>
-                <div id="loop-mode"><LoopModeWidget /></div>
-                <div id="quality-loop"><QualityLoopWidget /></div>
-              </CollapsibleSection>
-
-              <CollapsibleSection title="CONTENT" icon="✍️" sectionId="content" defaultOpen={false}>
-                <div id="x-publisher"><XPublisherWidget /></div>
-                <div id="youtube-clip"><YouTubeClipperWidget /></div>
-                <div id="remotion"><RemotionWidget /></div>
-                <div id="cronograma"><CronogramaWidget /></div>
-              </CollapsibleSection>
-
-              <CollapsibleSection title="STRATEGY" icon="🎯" sectionId="strategy" defaultOpen={false}>
-                <div id="brainstorming"><BrainstormingWidget /></div>
-                <div id="grill-me"><GrillMeWidget /></div>
-                <div id="writing-plans"><WritingPlansWidget /></div>
-                <div id="benchmarking"><BenchmarkingWidget /></div>
-                <div id="interface-designing"><InterfaceDesigningWidget /></div>
-              </CollapsibleSection>
-
-              <CollapsibleSection title="META / SKILLS" icon="🧠" sectionId="meta-skills" defaultOpen={false}>
-                <div id="find-skills">
-                  <ShellSkillCard title="Find Skills" skillSlug="find-skills" icon="🔎">
-                    <FindSkillsWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="skill-builder">
-                  <ShellSkillCard title="Skill Builder" skillSlug="skill-builder" icon="🧱">
-                    <SkillBuilderWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="skill-creator">
-                  <ShellSkillCard title="Skill Creator" skillSlug="skill-creator" icon="✨">
-                    <SkillCreatorWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="masters">
-                  <ShellSkillCard title="Skill From Masters" skillSlug="skill-from-masters" icon="🎓">
-                    <SkillFromMastersWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="installer">
-                  <ShellSkillCard title="Skill Installer" skillSlug="skill-installer" icon="📦">
-                    <SkillInstallerWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="mcp">
-                  <ShellSkillCard title="MCP Client" skillSlug="mcp-client" icon="🔌">
-                    <MCPWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="a2a">
-                  <ShellSkillCard title="Multi-Agent (A2A)" skillSlug="multi-agent-orchestrator" icon="🤖" quarantine={false}>
-                    <MultiAgentWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="consulta">
-                  <ShellSkillCard title="Consulta Contexto" skillSlug="consulta-contexto" icon="❓">
-                    <ConsultaContextoWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="superpowers">
-                  <ShellSkillCard title="Superpowers" skillSlug="superpowers" icon="⚡">
-                    <SuperpowersWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="orchestrator">
-                  <ShellSkillCard title="Skill Orchestrator" skillSlug="orquestador" icon="🎯" quarantine={false}>
-                    <SkillOrchestratorWidget />
-                  </ShellSkillCard>
-                </div>
-                <div id="warpgrep">
-                  <ShellSkillCard title="Warpgrep" skillSlug="warpgrep" icon="📡">
-                    <WarpgrepWidget />
-                  </ShellSkillCard>
-                </div>
-              </CollapsibleSection>
-            </div>
-
-            <Footer />
+    <div className="min-h-screen bg-[#0a0a0f] text-white">
+      {/* Nav */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur">
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-2xl font-black tracking-tight">RR ALIADOS</span>
+            <span className="text-xs text-white/50 hidden sm:block">Brutalismo Estratégico Colombiano</span>
           </div>
-        </main>
-      </div>
-      <ChatbotWidget />
+          <div className="flex items-center gap-6">
+            <a href="#desarrollos" className="text-sm text-white/70 hover:text-white transition">Desarrollos</a>
+            <a href="#clientes" className="text-sm text-white/70 hover:text-white transition">Clientes</a>
+            <a href="#metodo" className="text-sm text-white/70 hover:text-white transition">Método</a>
+            <Link
+              href="/login"
+              className="px-4 py-2 text-sm font-medium bg-white text-black rounded hover:bg-white/90 transition"
+            >
+              Acceso interno
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <section className="pt-32 pb-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl">
+            <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tight mb-6">
+              Con las manos<br />en el fuego.
+            </h1>
+            <p className="text-xl md:text-2xl text-white/60 max-w-2xl mb-8">
+              Growth partner boutique. AI First. Resultados medibles.
+              Estrategia, desarrollo, contenido y datos para hacer crecer tu negocio.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href="#desarrollos"
+                className="px-8 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition"
+              >
+                Ver desarrollos
+              </a>
+              <a
+                href="#clientes"
+                className="px-8 py-4 border border-white/20 text-white font-bold rounded hover:bg-white/10 transition"
+              >
+                Nuestros clientes
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <section className="border-y border-white/10 py-12 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div>
+            <div className="text-4xl font-black">8+</div>
+            <div className="text-white/50 text-sm mt-1">Desarrollos propios</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black">6</div>
+            <div className="text-white/50 text-sm mt-1">Clientes y prospectos</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black">35+</div>
+            <div className="text-white/50 text-sm mt-1">Skills IA orquestadas</div>
+          </div>
+          <div>
+            <div className="text-4xl font-black">100%</div>
+            <div className="text-white/50 text-sm mt-1">AI First</div>
+          </div>
+        </div>
+      </section>
+
+      {/* Desarrollos */}
+      <section id="desarrollos" className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-black mb-4">Desarrollos</h2>
+          <p className="text-white/60 mb-12 max-w-2xl">
+            Herramientas que construimos para operar mejor: dashboards, CRMs, cotizadores,
+            captura de leads y plataformas verticales.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {DEVELOPMENTS.map((dev) => (
+              <a
+                key={dev.id}
+                href={dev.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group border border-white/10 rounded-lg p-6 hover:border-white/30 transition bg-white/[0.02]"
+              >
+                <div className="text-3xl mb-4">{dev.icon}</div>
+                <h3 className="text-xl font-bold mb-2 group-hover:text-white transition">{dev.title}</h3>
+                <p className="text-white/50 text-sm mb-4">{dev.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {dev.tags.map((tag) => (
+                    <span key={tag} className="text-xs px-2 py-1 bg-white/5 rounded text-white/40">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Clientes */}
+      <section id="clientes" className="py-20 px-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-black mb-4">Clientes y prospectos</h2>
+          <p className="text-white/60 mb-12 max-w-2xl">
+            Trabajamos con negocios que quieren crecer con estrategia y tecnología.
+            Estos son algunos de los proyectos en los que estamos activos.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CLIENTS.map((client) => (
+              <div
+                key={client.name}
+                className="border border-white/10 rounded-lg p-6 hover:border-white/30 transition bg-white/[0.02]"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <h3 className="text-xl font-bold">{client.name}</h3>
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    client.status === "Cliente activo"
+                      ? "bg-green-500/20 text-green-400"
+                      : client.status === "Prospecto"
+                      ? "bg-yellow-500/20 text-yellow-400"
+                      : "bg-blue-500/20 text-blue-400"
+                  }`}>
+                    {client.status}
+                  </span>
+                </div>
+                <p className="text-white/50 text-sm mb-4">{client.industry}</p>
+                {client.url && (
+                  <a
+                    href={client.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-white/70 hover:text-white transition underline underline-offset-4"
+                  >
+                    Ver proyecto →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Método */}
+      <section id="metodo" className="py-20 px-6 border-t border-white/10">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-black mb-12">Nuestro método</h2>
+          <div className="grid md:grid-cols-3 gap-12">
+            <div>
+              <div className="text-5xl font-black text-white/10 mb-4">01</div>
+              <h3 className="text-xl font-bold mb-3">Estrategia brutal</h3>
+              <p className="text-white/50">
+                No vendemos humo. Analizamos tu negocio, tu mercado y tu competencia
+                antes de proponer cualquier cosa. Si no podemos ayudarte, te lo decimos.
+              </p>
+            </div>
+            <div>
+              <div className="text-5xl font-black text-white/10 mb-4">02</div>
+              <h3 className="text-xl font-bold mb-3">AI First</h3>
+              <p className="text-white/50">
+                Usamos inteligencia artificial en todo: desde la estrategia hasta la ejecución.
+                35+ skills propias que nos permiten entregar más rápido y con mejor calidad.
+              </p>
+            </div>
+            <div>
+              <div className="text-5xl font-black text-white/10 mb-4">03</div>
+              <h3 className="text-xl font-bold mb-3">Resultados medibles</h3>
+              <p className="text-white/50">
+                Todo lo que hacemos se mide. Dashboards en tiempo real, reportes IA,
+                y métricas claras para que sepas exactamente qué está pasando.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 px-6 border-t border-white/10">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-black mb-6">¿Quieres crecer con nosotros?</h2>
+          <p className="text-white/60 mb-8">
+            Agenda una llamada de descubrimiento. Analizamos tu caso y te decimos
+            si podemos ayudarte y cómo.
+          </p>
+          <a
+            href="mailto:rraliadosteam@gmail.com"
+            className="inline-block px-8 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition"
+          >
+            Agendar llamada
+          </a>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 py-12 px-6">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="text-white/40 text-sm">
+            © 2026 RR ALIADOS S.A.S. — Envigado, Colombia
+          </div>
+          <div className="flex items-center gap-6 text-sm text-white/40">
+            <a href="mailto:rraliadosteam@gmail.com" className="hover:text-white transition">
+              rraliadosteam@gmail.com
+            </a>
+            <Link href="/login" className="hover:text-white transition">
+              Acceso interno
+            </Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
