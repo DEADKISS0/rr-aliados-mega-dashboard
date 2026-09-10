@@ -42,8 +42,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refresh = useCallback(async () => {
     try {
-      const resp = await fetch("/api/auth/me");
-      const data = await resp.json();
+      const resp = await fetch("/api/auth/me", { cache: "no-store" });
+      const data = (await resp.json().catch(() => ({}))) as {
+        authenticated?: boolean;
+        openMode?: boolean;
+        role?: DashboardRole;
+        forcesPitch?: boolean;
+      };
       if (!resp.ok) {
         setAuthenticated(false);
         setOpenMode(false);
@@ -52,12 +57,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setAuthenticated(Boolean(data.authenticated));
       setOpenMode(Boolean(data.openMode));
-      setRole((data.role as DashboardRole) || "ops");
+      setRole(data.role || "ops");
       const force = Boolean(data.forcesPitch);
       setForcesPitch(force);
       if (force) setPresentationMode(true);
       try {
-        document.body.dataset.rrRole = (data.role as string) || "ops";
+        document.body.dataset.rrRole = data.role || "ops";
       } catch {
         /* ignore */
       }
