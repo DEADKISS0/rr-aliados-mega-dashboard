@@ -128,6 +128,10 @@ const OPS_ONLY_API_PREFIXES = [
   "/api/regenerate",
   "/api/metricool",
   "/api/generate-pdf",
+  // These endpoints expose internal CRM, pipeline and financial data.
+  "/api/projects",
+  "/api/entities",
+  "/api/demos",
 ];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {

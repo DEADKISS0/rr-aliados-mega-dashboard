@@ -26,10 +26,20 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // NOTA DE SEGURIDAD: sin AUTH_SECRET el dashboard queda totalmente abierto
-  // (modo dev/local). En Vercel SIEMPRE debe existir AUTH_SECRET; ahí aplica el
-  // modelo por niveles de abajo.
+  // En desarrollo local se permite trabajar sin credenciales. En producción,
+  // una configuración sin AUTH_SECRET debe fallar cerrado para /ops y APIs
+  // internas; de lo contrario un deploy mal configurado expone datos privados.
   if (!authConfigured()) {
+    if (
+      process.env.NODE_ENV === "production" &&
+      (pathname.startsWith("/ops") ||
+        (pathname.startsWith("/api/") && !apiAllowed("public", pathname)))
+    ) {
+      return NextResponse.json(
+        { error: "Autenticación no configurada en producción" },
+        { status: 503 }
+      );
+    }
     return NextResponse.next();
   }
 

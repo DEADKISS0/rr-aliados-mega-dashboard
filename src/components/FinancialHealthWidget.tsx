@@ -68,10 +68,9 @@ export default function FinancialHealthWidget() {
   // Calcular métricas financieras desde datos vivos
   const clientesActivos = projects.filter((p) => p.categoria === "cliente" && p.estado === "activo");
   const valorContratado = clientesActivos.reduce((sum, p) => sum + (p.valor_total || 0), 0);
-  valorContratado + (scenario === "open" ? stats?.valor_potencial || 0 : 0);
   const valorCobrado = stats?.valor_pagado || 0;
   const valorPendiente = valorContratado - valorCobrado;
-  const valorPipeline = stats?.valor_potencial || 0;
+  const valorPipeline = scenario === "open" ? stats?.valor_potencial || 0 : 0;
 
   // Runway: capital cobrado / costo mensual
   const runwayMonths = valorCobrado > 0 ? Math.floor(valorCobrado / FIXED_COSTS.equipo) : 0;
@@ -106,7 +105,7 @@ export default function FinancialHealthWidget() {
 
   if (loading) {
     return (
-      <WidgetCard title="Salud Financiera" icon="🏦" badge="CARGANDO" badgeVariant="default">
+      <WidgetCard title="Salud Financiera" icon="🏦" badge="CARGANDO" badgeVariant="support">
         <div className="text-center py-8 text-sm" style={{ color: "var(--text-secondary)" }}>
           Consultando datos vivos…
         </div>
@@ -119,7 +118,7 @@ export default function FinancialHealthWidget() {
       title="Salud Financiera"
       icon="🏦"
       badge={live ? "EN VIVO" : "OFFLINE"}
-      badgeVariant={live ? "success" : "danger"}
+      badgeVariant={live ? "active" : "demo"}
     >
       {/* Métricas principales */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">

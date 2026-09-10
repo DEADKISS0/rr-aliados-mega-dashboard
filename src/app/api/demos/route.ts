@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 
-const SUPABASE_URL = process.env.SUPABASE_URL || "https://ntgtvtzbjwotuwkiflar.supabase.co";
+const SUPABASE_URL = process.env.SUPABASE_URL?.replace(/\/$/, "");
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_KEY || "";
 
 export async function GET() {
   try {
-    if (!SUPABASE_KEY) {
+    if (!SUPABASE_URL || !SUPABASE_KEY) {
       return NextResponse.json(
-        { error: "Supabase no configurado", demo: true },
+        { error: "Supabase no configurado", live: false },
         { status: 503 }
       );
     }
@@ -17,7 +17,7 @@ export async function GET() {
         apikey: SUPABASE_KEY,
         Authorization: `Bearer ${SUPABASE_KEY}`,
       },
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
 
     if (!res.ok) {

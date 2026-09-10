@@ -103,7 +103,7 @@ export default function SalesPipelineWidget() {
 
   if (loading) {
     return (
-      <WidgetCard title="Pipeline de Ventas" icon="💰" badge="CARGANDO" badgeVariant="default">
+      <WidgetCard title="Pipeline de Ventas" icon="💰" badge="CARGANDO" badgeVariant="support">
         <div className="text-center py-8 text-sm" style={{ color: "var(--text-secondary)" }}>
           Consultando datos vivos…
         </div>
@@ -116,7 +116,7 @@ export default function SalesPipelineWidget() {
       title="Pipeline de Ventas"
       icon="💰"
       badge={live ? "EN VIVO" : "OFFLINE"}
-      badgeVariant={live ? "success" : "danger"}
+      badgeVariant={live ? "active" : "demo"}
     >
       {/* Métricas */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">

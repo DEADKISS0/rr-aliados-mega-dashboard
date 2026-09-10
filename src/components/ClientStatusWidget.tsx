@@ -76,7 +76,7 @@ export default function ClientStatusWidget() {
 
   if (loading) {
     return (
-      <WidgetCard title="Estado de Clientes" icon="👥" badge="CARGANDO" badgeVariant="default">
+      <WidgetCard title="Estado de Clientes" icon="👥" badge="CARGANDO" badgeVariant="support">
         <div className="text-center py-8 text-sm" style={{ color: "var(--text-secondary)" }}>
           Consultando datos vivos…
         </div>
@@ -89,7 +89,7 @@ export default function ClientStatusWidget() {
       title="Estado de Clientes"
       icon="👥"
       badge={live ? "EN VIVO" : "OFFLINE"}
-      badgeVariant={live ? "success" : "danger"}
+      badgeVariant={live ? "active" : "demo"}
     >
       {/* Métricas */}
       <div className="grid grid-cols-2 gap-2 mb-4">

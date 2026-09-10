@@ -52,7 +52,7 @@ import ConsultaContextoWidget from "@/components/ConsultaContextoWidget";
 import SkillsCatalogWidget from "@/components/SkillsCatalogWidget";
 import MiroFishReportsWidget from "@/components/MiroFishReportsWidget";
 import MiroFishSignalsWidget from "@/components/MiroFishSignalsWidget";
-import ReporteOptimizacionesWidget from "@/components/ReporteOptimizacionesWidget";
+import ReportesEstrategicosWidget from "@/components/ReportesEstrategicosWidget";
 import ActionProposalWidget from "@/components/ActionProposalWidget";
 import ReportInsightBoard from "@/components/ReportInsightBoard";
 import SalesPipelineWidget from "@/components/SalesPipelineWidget";
@@ -136,7 +136,7 @@ export default function Home() {
               <MiroFishReportsWidget />
             </div>
             <div id="estrategia" className="col-6">
-              <ReporteOptimizacionesWidget />
+              <ReportesEstrategicosWidget />
             </div>
             <div id="report-insights" className="col-12">
               <ReportInsightBoard />
