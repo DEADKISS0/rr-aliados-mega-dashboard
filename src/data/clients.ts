@@ -166,16 +166,6 @@ export const CLIENTS: Client[] = [
     notes: "Prospecto premium.",
   },
   {
-    slug: "arvin",
-    name: "Arvin",
-    industry: "Por clasificar",
-    status: "prospect",
-    priority: "low",
-    drivePath: "rr_aliados/02_Ventas/Prospectos",
-    tags: ["pendiente-ficha"],
-    notes: "Cliente/prospecto mencionado por Rosas (nombre exacto por confirmar).",
-  },
-  {
     slug: "real-seguros",
     name: "Real Seguros",
     industry: "Seguros",
