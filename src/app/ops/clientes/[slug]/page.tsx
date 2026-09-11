@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getClientBySlug } from "@/data/clients";
+import ClientLivePanel from "@/components/ClientLivePanel";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -167,31 +168,24 @@ export default async function ClienteDetailPage({ params }: Props) {
           </div>
         )}
 
-        {/* Placeholder para futuras secciones */}
+        <ClientLivePanel slug={client.slug} />
+
         <div className="grid md:grid-cols-2 gap-6 mt-8">
-          <div className="border border-white/10 rounded-lg p-6 border-dashed">
+          <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">📈 Métricas</h3>
-            <p className="text-white/30 text-sm">
-              Próximamente: métricas de performance, resultados y KPIs del cliente.
-            </p>
+            <p className="text-white/50 text-sm">KPIs y resultados se agregan aquí cuando estén disponibles en la fuente de datos.</p>
           </div>
-          <div className="border border-white/10 rounded-lg p-6 border-dashed">
+          <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">📁 Entregables</h3>
-            <p className="text-white/30 text-sm">
-              Próximamente: lista de entregables, archivos y documentos del proyecto.
-            </p>
+            <p className="text-white/50 text-sm">{client.tags.includes("prototipo-web") ? "Prototipo web vinculado arriba." : "Sin entregables publicados en la ficha todavía."}</p>
           </div>
-          <div className="border border-white/10 rounded-lg p-6 border-dashed">
+          <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">📅 Cronograma</h3>
-            <p className="text-white/30 text-sm">
-              Próximamente: hitos, fechas clave y roadmap del proyecto.
-            </p>
+            <p className="text-white/50 text-sm">{client.startDate ? `Inicio registrado: ${client.startDate}.` : "No hay hitos fechados en la ficha actual."}</p>
           </div>
-          <div className="border border-white/10 rounded-lg p-6 border-dashed">
+          <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">💬 Comunicaciones</h3>
-            <p className="text-white/30 text-sm">
-              Próximamente: historial de reuniones, mensajes y acuerdos.
-            </p>
+            <p className="text-white/50 text-sm">{client.notes ?? "Sin notas operativas registradas."}</p>
           </div>
         </div>
       </div>

@@ -132,6 +132,7 @@ const OPS_ONLY_API_PREFIXES = [
   "/api/projects",
   "/api/entities",
   "/api/demos",
+  "/api/client",
 ];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {
