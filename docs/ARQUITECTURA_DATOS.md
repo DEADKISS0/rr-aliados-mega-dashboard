@@ -24,9 +24,15 @@
 4. En producción, si falta `AUTH_SECRET`, `/ops` y las APIs internas responden 503 en vez de quedar abiertas.
 5. La landing pública no debe leer proyectos, entidades, pagos ni reportes internos.
 
+La autorización es centralizada en `src/lib/auth.ts` (`apiAllowed`) y aplicada
+por `middleware.ts`. Ver `docs/AUDITORIA_2026-09-11.md` para la matriz de
+permisos por rol (público / secretario / ops) y su verificación en producción.
+
 ## Pendiente de integración
 
-- Confirmar que las tablas `projects`, `entities` y `demos` son el esquema canónico de RR.
+- Confirmar que las tablas `projects`, `entities` y `demos` son el esquema canónico de RR. (Hecho: verificadas en el proyecto `ntgtvtzbjwotuwkiflar`.)
 - Agregar validación de respuesta (por ejemplo, Zod) antes de mostrar datos en producción.
-- Reemplazar el registro estático de `src/data/clients.ts` por una vista derivada de `entities`, conservando allí solo metadatos editoriales y enlaces públicos.
-- Añadir pruebas de contrato para respuestas Supabase y pruebas de autorización para cada endpoint.
+- ~~Reemplazar el registro estático de `src/data/clients.ts` por una vista derivada de `entities`~~ Hecho en `src/lib/liveClients.ts`; `clients.ts` queda como metadatos editoriales (enlaces, tags, notas).
+- Añadir pruebas de contrato para respuestas Supabase.
+- ~~pruebas de autorización para cada endpoint~~ Cubierto a nivel de matriz de roles en `src/lib/auth.test.ts`.
+- Migrar `supabase/migrations/20260911_supervisor_events.sql` y `20260911_operation_proposals.sql` (hoy las tablas devuelven 404).
