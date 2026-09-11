@@ -159,6 +159,7 @@ const OPS_ONLY_API_PREFIXES = [
   "/api/cuentas-cobro",
   "/api/personas-cobro",
   "/api/documentos",
+  "/api/supervisor",
 ];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {

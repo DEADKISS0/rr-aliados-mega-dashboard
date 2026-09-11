@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
   // Rutas públicas (landing, login, APIs de auth, estáticos)
   if (
     pathname.startsWith("/api/auth") ||
+    pathname === "/api/supervisor/heartbeat" ||
     pathname.startsWith("/api/reports-index") ||
     pathname.startsWith("/api/optimizacion-index") ||
     pathname.startsWith("/api/report-file") ||

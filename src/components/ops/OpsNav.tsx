@@ -4,6 +4,7 @@ const links = [
   ["Finanzas", "/ops/finanzas"],
   ["Clientes", "/ops/clientes"],
   ["Desarrollos", "/ops/desarrollos"],
+  ["Supervisor", "/ops/supervisor"],
 ] as const;
 
 export default function OpsNav({ active }: { active: (typeof links)[number][0] }) {

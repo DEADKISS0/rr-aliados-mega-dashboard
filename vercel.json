@@ -1,6 +1,5 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "next build",
-  "outputDirectory": ".next",
-  "installCommand": "npm install"
+  "crons": [
+    { "path": "/api/supervisor/heartbeat", "schedule": "*/15 * * * *" }
+  ]
 }
