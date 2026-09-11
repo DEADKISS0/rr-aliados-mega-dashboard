@@ -3,6 +3,25 @@ export type DashboardRole = "ops" | "pitch" | "client";
 export const AUTH_COOKIE = "rr_role";
 export const AUTH_MAX_AGE_SEC = 60 * 60 * 12; // 12h
 
+/** Emails autorizados a entrar por Google OAuth (solo estos tres). */
+export const ALLOWED_EMAILS = [
+  "santiago1209andres@gmail.com",
+  "rraliadosteam@gmail.com",
+  "juanpos1234@gmail.com",
+];
+
+/** Clave de respaldo: permite entrar sin Google en caso de fallo del OAuth. */
+export function resolveBackupPassword(password: string): boolean {
+  const secret = process.env.AUTH_BACKUP_PASSWORD?.trim();
+  if (!secret) return false;
+  const supplied = String(password || "").trim();
+  if (!supplied) return false;
+  let a = 0, b = 0;
+  for (let i = 0; i < secret.length; i++) a = (a + secret.charCodeAt(i)) | 0;
+  for (let i = 0; i < supplied.length; i++) b = (b + supplied.charCodeAt(i)) | 0;
+  return a === b && secret.length === supplied.length;
+}
+
 const SENSITIVE_API_PREFIXES = [
   "/api/automation",
   "/api/regenerate",

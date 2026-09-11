@@ -159,16 +159,6 @@ export const CLIENTS: Client[] = [
     notes: "Parte del prospecto Amsterdam ×3 (Aruba).",
   },
   {
-    slug: "siraitia",
-    name: "Siraitia",
-    industry: "Agro / Exportación",
-    status: "prospect",
-    priority: "medium",
-    drivePath: "rr_aliados/06_Clientes/Siraitia",
-    tags: ["agro", "exportacion", "contenido", "guiones"],
-    notes: "Prospecto con documentación extensa: guiones, roadmap, pitch, reuniones.",
-  },
-  {
     slug: "zapatos",
     name: "Zapatos",
     industry: "Retail / Calzado",
