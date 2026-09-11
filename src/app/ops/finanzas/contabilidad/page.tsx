@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import OpsNav from '@/components/ops/OpsNav';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 type Tab = 'bancos' | 'cuentas_por_pagar' | 'obligaciones';
@@ -76,7 +77,7 @@ export default function ContabilidadPage() {
   return <main className="min-h-screen px-5 py-8 md:px-10">
     <div className="mx-auto max-w-6xl">
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <div><Link href="/" className="text-xs text-[#E43A92] hover:underline">← Volver al dashboard</Link><h1 className="mt-3 text-3xl font-extrabold tracking-tight">Contabilidad central</h1><p className="mt-2 text-sm text-[var(--muted-foreground)]">Edición controlada en Supabase · fuente financiera original: Drive / Excel</p></div>
+        <div><Link href="/ops/finanzas" className="text-xs text-[#E43A92] hover:underline">← Volver a Finanzas</Link><h1 className="mt-3 text-3xl font-extrabold tracking-tight">Contabilidad central</h1><p className="mt-2 text-sm text-[var(--muted-foreground)]">Edición controlada en Supabase · fuente financiera original: Drive / Excel</p></div><OpsNav active="Finanzas" />
         {message && <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-[var(--muted-foreground)]">{message}</span>}
       </div>
       <div className="mb-6 flex gap-2 overflow-x-auto border-b border-white/10">

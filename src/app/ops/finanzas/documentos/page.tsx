@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { FilePlus2, Files, Save, Trash2, FolderOpen, ExternalLink } from 'lucide-react';
 import type { DocumentRecord } from '@/lib/finance/types';
+import OpsNav from '@/components/ops/OpsNav';
 
 const hoy = () => new Date().toISOString().slice(0, 10);
 
@@ -121,9 +122,12 @@ export default function DocumentosPage() {
             <h1 className="text-3xl font-black uppercase tracking-tight">Guardar documentos</h1>
             <p className="mt-1 text-sm text-foreground/70">La verdad vive en el Drive · aquí está el índice y el respaldo</p>
           </div>
+          <div className="flex flex-wrap items-center gap-3">
+          <OpsNav active="Finanzas" />
           <div className="flex items-center gap-2 rounded border border-[var(--border)] px-3 py-2 text-xs text-foreground/80">
             <Files className="h-4 w-4 text-primary" />
             {docs.length} documento{docs.length !== 1 ? 's' : ''}
+          </div>
           </div>
         </div>
       </section>

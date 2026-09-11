@@ -34,8 +34,20 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: 'Archivo Excel requerido (field: file)' }, { status: 400 });
   }
 
+  // Defensa básica para el endpoint de carga: solo se procesa un archivo
+  // razonable y no se permite que una subida accidental consuma toda la función.
+  const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
+  if (file.size > MAX_UPLOAD_BYTES) {
+    return NextResponse.json({ ok: false, error: 'El archivo supera el límite de 10 MB' }, { status: 413 });
+  }
+
   const buffer = Buffer.from(await file.arrayBuffer());
-  const wb = XLSX.read(buffer, { type: 'buffer', cellDates: true });
+  let wb: XLSX.WorkBook;
+  try {
+    wb = XLSX.read(buffer, { type: 'buffer', cellDates: true, bookProps: true });
+  } catch {
+    return NextResponse.json({ ok: false, error: 'El archivo no es un Excel válido' }, { status: 400 });
+  }
   const dashWs = wb.Sheets['00_Dashboard'];
 
   const runInsert = await supabase

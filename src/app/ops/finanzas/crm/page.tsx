@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import type { EntityRecord, ProjectRecord, SyncRun, TalentCandidate } from '@/lib/finance/types';
+import OpsNav from '@/components/ops/OpsNav';
 
 export default function CrmPage() {
   const [entities, setEntities] = useState<EntityRecord[]>([]);
@@ -32,9 +33,7 @@ export default function CrmPage() {
           <h1 className="text-lg font-bold">CRM RR Aliados</h1>
           <p className="text-xs text-gray-500">Pipeline · Talento · Sync</p>
         </div>
-        <Link href="/" className="text-xs px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10">
-          ← Dashboard
-        </Link>
+        <OpsNav active="Finanzas" />
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-4 flex gap-2 border-b border-white/10">

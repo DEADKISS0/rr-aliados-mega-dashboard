@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
   const password = String(body.password || "");
 
   // Clave de respaldo: entra como ops sin importar las claves por rol.
-  if (resolveBackupPassword(password)) {
+  if (await resolveBackupPassword(password)) {
     const token = await signRole("ops", secret);
     const res = NextResponse.json({ ok: true, role: "ops", forcesPitch: false });
     res.cookies.set(AUTH_COOKIE, token, {

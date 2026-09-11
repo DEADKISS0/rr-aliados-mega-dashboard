@@ -1,19 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { CLIENTS } from "@/data/clients";
+import { DEVELOPMENTS } from "@/data/developments";
 
 export const metadata: Metadata = {
   title: "RR ALIADOS — Growth Partner",
   description: "Estrategia, desarrollo y datos para convertir marcas con potencial en sistemas de crecimiento.",
 };
 
-const DEVELOPMENTS = [
-  ["RR Finanzas", "Caja, runway, cuentas de cobro y proyecciones conectadas.", "/login?next=%2Fops%2Ffinanzas", "01"],
-  ["RR Kotizador", "Cotizaciones, precios dinámicos y cronogramas automáticos.", "https://rr-kotizador.vercel.app/", "02"],
-  ["DashWeb Core", "ERP/CRM para proyectos, tareas, RRHH, facturación y OKRs.", "https://dashweb-core-frontend-beta.up.railway.app/login", "03"],
-  ["SaaS Vertical Hub", "CRM y demos personalizadas para verticales de negocio.", "https://rr-saas-vertical.vercel.app/", "04"],
-  ["Altruismo", "Suite de herramientas web sin anuncios para la comunidad.", "https://altruismo-web.vercel.app/es", "05"],
-];
 
 const statusLabel = { active: "Activo", prospect: "Prospecto", closed: "Cerrado", paused: "Pausado" } as const;
 
@@ -29,7 +23,7 @@ export default function LandingPage() {
 
       <section className="landing-stats" aria-label="Indicadores RR Aliados"><div><strong>{DEVELOPMENTS.length}+</strong><span>desarrollos activos</span></div><div><strong>{CLIENTS.length}</strong><span>clientes y prospectos</span></div><div><strong>35+</strong><span>skills orquestadas</span></div><div><strong>100%</strong><span>AI First</span></div></section>
 
-      <section id="desarrollos" className="landing-section"><div className="section-intro"><p className="eyebrow">01 / ECOSISTEMA</p><h2>Lo que construimos<br /><span>para operar mejor.</span></h2><p>Productos internos, prototipos y sistemas que convierten estrategia en operación.</p></div><div className="development-grid">{DEVELOPMENTS.map(([title, description, url, number]) => <a key={title} href={url} target="_blank" rel="noreferrer" className="development-card"><span className="card-index">{number}</span><h3>{title} <span>↗</span></h3><p>{description}</p><small>ABRIR DESARROLLO</small></a>)}</div></section>
+      <section id="desarrollos" className="landing-section"><div className="section-intro"><p className="eyebrow">01 / ECOSISTEMA</p><h2>Lo que construimos<br /><span>para operar mejor.</span></h2><p>Productos internos, prototipos y sistemas que convierten estrategia en operación.</p></div><div className="development-grid">{DEVELOPMENTS.map(({ title, description, url, number }) => <a key={title} href={url} target={url.startsWith("/") ? undefined : "_blank"} rel={url.startsWith("/") ? undefined : "noreferrer"} className="development-card"><span className="card-index">{number}</span><h3>{title} <span>↗</span></h3><p>{description}</p><small>ABRIR DESARROLLO</small></a>)}</div></section>
 
       <section id="clientes" className="landing-section landing-section--alt"><div className="section-intro"><p className="eyebrow">02 / ALIANZAS</p><h2>Marcas con<br /><span>algo que decir.</span></h2><p>Una vista pública del trabajo y las oportunidades que estamos construyendo.</p></div><div className="client-grid">{CLIENTS.map((client) => { const url = client.prototypeUrl || client.website; return <article key={client.slug} className="client-row">{url ? <a href={url} target="_blank" rel="noreferrer" className="client-row__main" aria-label={`Ver proyecto ${client.name}`}><span className="client-status">{statusLabel[client.status]}</span><h3>{client.name}</h3><p>{client.industry}</p><span className="client-open">↗</span></a> : <><span className="client-status">{statusLabel[client.status]}</span><h3>{client.name}</h3><p>{client.industry}</p><span className="client-pending">EN CONSTRUCCIÓN</span></>}{client.instagram ? <a href={client.instagram} target="_blank" rel="noreferrer" className="client-ig" aria-label={`Instagram ${client.name}`}>IG</a> : null}</article>; })}</div></section>
 

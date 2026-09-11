@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getClientBySlug } from "@/data/clients";
 import ClientLivePanel from "@/components/ClientLivePanel";
+import OpsNav from "@/components/ops/OpsNav";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -16,14 +17,14 @@ export default async function ClienteDetailPage({ params }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white p-6">
+    <div className="min-h-screen bg-[#070001] p-6 text-[#FFFFF3] md:p-10">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/ops/clientes" className="text-white/50 hover:text-white text-sm mb-2 inline-block">
+          <Link href="/ops/clientes" className="mb-3 inline-block font-mono text-xs uppercase tracking-widest text-[#D2C7D0] hover:text-[#DED116]">
             ← Volver a clientes
           </Link>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-wrap items-start justify-between gap-6">
             <div>
               <h1 className="text-4xl font-black mb-2">{client.name}</h1>
               <p className="text-white/50">{client.industry}</p>
@@ -97,6 +98,7 @@ export default async function ClienteDetailPage({ params }: Props) {
                 <dt className="text-white/40 text-sm">Drive</dt>
                 <dd className="text-white/70 text-sm font-mono">{client.drivePath}</dd>
               </div>
+            <OpsNav active="Clientes" />
             </dl>
           </div>
 

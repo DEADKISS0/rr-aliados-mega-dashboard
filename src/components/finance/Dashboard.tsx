@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import OpsNav from '@/components/ops/OpsNav';
 import { fetchSupabaseFinancialSnapshot } from '@/lib/finance/fetch';
 import type { CashMovementRecord } from '@/lib/finance/types';
 
@@ -439,6 +440,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <OpsNav active="Finanzas" />
             {dbSource === 'supabase' && dbSnapshot && (
               <div className="hidden md:flex items-center gap-2">
                 <span className="px-2 py-1 rounded-lg text-[10px] font-bold bg-[#22c55e]/15 text-[#22c55e] border border-[#22c55e]/20">Supabase</span>

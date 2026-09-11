@@ -11,15 +11,17 @@ export const ALLOWED_EMAILS = [
 ];
 
 /** Clave de respaldo: permite entrar sin Google en caso de fallo del OAuth. */
-export function resolveBackupPassword(password: string): boolean {
+export async function resolveBackupPassword(password: string): Promise<boolean> {
   const secret = process.env.AUTH_BACKUP_PASSWORD?.trim();
   if (!secret) return false;
   const supplied = String(password || "").trim();
   if (!supplied) return false;
-  let a = 0, b = 0;
-  for (let i = 0; i < secret.length; i++) a = (a + secret.charCodeAt(i)) | 0;
-  for (let i = 0; i < supplied.length; i++) b = (b + supplied.charCodeAt(i)) | 0;
-  return a === b && secret.length === supplied.length;
+  const enc = new TextEncoder();
+  const [expected, actual] = await Promise.all([
+    crypto.subtle.digest("SHA-256", enc.encode(secret)),
+    crypto.subtle.digest("SHA-256", enc.encode(supplied)),
+  ]);
+  return timingSafeEqual(new Uint8Array(expected), new Uint8Array(actual));
 }
 
 const SENSITIVE_API_PREFIXES = [

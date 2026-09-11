@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Download, FileText, Plus, Save, ShieldCheck, Trash2, User, Banknote, ChevronLeft } from 'lucide-react';
 import type { CuentaCobroPayload, CuentaCobroTemplate, PersonaCobro } from '@/lib/cuentas-cobro/types';
 import { DECLARACION_NO_SUBCONTRATACION } from '@/lib/cuentas-cobro/types';
+import OpsNav from '@/components/ops/OpsNav';
 
 const COP = new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 });
 const hoy = () => new Date().toISOString().slice(0, 10);
@@ -347,14 +348,14 @@ export default function CuentasCobroPage() {
       <header className={`border-b ${bd} ${dark ? 'bg-[#070001]/80' : 'bg-white/80'} backdrop-blur-xl sticky top-0 z-40`}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/" className={`p-2 rounded-lg ${dark ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'}`}>
+            <Link href="/ops/finanzas" className={`p-2 rounded-lg ${dark ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'}`}>
               <ChevronLeft className="h-4 w-4" />
             </Link>
             <div>
               <h1 className={`text-sm font-extrabold tracking-tight ${t}`}>Cuentas de <span className="text-[#BE076D]">cobro</span></h1>
               <p className="text-[10px] text-[#D2C7D0] font-medium">Generación · edición · PDF con firma</p>
             </div>
-          </div>
+          </div><OpsNav active="Finanzas" />
           <div className="flex items-center gap-2">
             <div className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-semibold ${dark ? 'bg-white/5 text-[#D2C7D0]' : 'bg-gray-100 text-gray-500'}`}>
               <ShieldCheck className="h-3.5 w-3.5 text-[#BE076D]" /> Datos sensibles · server-side
