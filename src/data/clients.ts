@@ -74,16 +74,6 @@ export const CLIENTS: Client[] = [
     notes: "Prospecto con documentación extensa: guiones, roadmap, pitch, reuniones.",
   },
   {
-    slug: "alma-y-mente",
-    name: "Alma y Mente",
-    industry: "Bienestar / Salud mental",
-    status: "prospect",
-    priority: "medium",
-    drivePath: "rr_aliados/06_Clientes/Alma_y_Mente",
-    tags: ["bienestar", "salud-mental", "estrategia", "posicionamiento"],
-    notes: "Prospecto. Estrategia de posicionamiento y guiones.",
-  },
-  {
     slug: "amsterdam",
     name: "Amsterdam",
     industry: "Servicios",
@@ -169,14 +159,14 @@ export const CLIENTS: Client[] = [
     notes: "Prototipo público registrado en Deploys_Indexer; ficha comercial por completar.",
   },
   {
-    slug: "arbin",
-    name: "Arbin",
+    slug: "arvin",
+    name: "Arvin",
     industry: "Por clasificar",
     status: "prospect",
     priority: "low",
     drivePath: "rr_aliados/02_Ventas/Prospectos",
     tags: ["pendiente-ficha"],
-    notes: "Cliente/prospecto mencionado por Rosas; falta vincular fuente, desarrollo y estado verificable.",
+    notes: "Cliente/prospecto mencionado por Rosas (nombre exacto por confirmar).",
   },
   {
     slug: "charles-brown",
@@ -224,6 +214,14 @@ export function getActiveClients(): Client[] {
 
 export function getProspects(): Client[] {
   return CLIENTS.filter((c) => c.status === "prospect");
+}
+
+export function getClientsWithPrototype(): Client[] {
+  return CLIENTS.filter((c) => c.prototypeUrl || c.website);
+}
+
+export function getClientsWithoutPrototype(): Client[] {
+  return CLIENTS.filter((c) => !c.prototypeUrl && !c.website);
 }
 
 export function getTotalContractValue(): number {
