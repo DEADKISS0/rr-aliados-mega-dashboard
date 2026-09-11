@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
-import { getClientBySlug } from "@/data/clients";
+import { getLiveClients } from "@/lib/liveClients";
 import { fetchSupabaseRows, SupabaseConfigError } from "@/lib/supabaseRest";
+
+export const dynamic = "force-dynamic";
 
 interface Row {
   id?: string | number;
@@ -25,7 +27,8 @@ function normalize(value: unknown): string {
     .trim();
 }
 
-function belongsToClient(row: Row, slug: string, name: string): boolean {
+function belongsToClient(row: Row, slug: string, name: string, entityId?: string): boolean {
+  if (entityId && typeof row.entity_id === "string" && row.entity_id === entityId) return true;
   const haystack = normalize([row.slug, row.nombre, row.name, row.entidad, row.cliente].join(" "));
   const needles = [slug, name].map(normalize).filter(Boolean);
   return needles.some((needle) => haystack.includes(needle) || needle.includes(haystack));
@@ -36,7 +39,18 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const client = getClientBySlug(slug);
+
+  // Resuelve el cliente contra la vista viva (incluye entidades sin ficha editorial).
+  let client: { slug: string; name: string; entityId?: string } | undefined;
+  let clientsLive = false;
+  try {
+    const result = await getLiveClients();
+    clientsLive = result.live;
+    const match = result.clients.find((candidate) => candidate.slug === slug);
+    if (match) client = { slug: match.slug, name: match.name, entityId: match.entityId };
+  } catch (error) {
+    console.error("Client API: no se pudo resolver la vista viva", error);
+  }
 
   if (!client) {
     return NextResponse.json({ error: "Cliente no encontrado" }, { status: 404 });
@@ -48,8 +62,8 @@ export async function GET(
       fetchSupabaseRows<Row>("entities", "select=*&order=nombre.asc"),
     ]);
 
-    const clientProjects = projects.filter((row) => belongsToClient(row, slug, client.name));
-    const clientEntities = entities.filter((row) => belongsToClient(row, slug, client.name));
+    const clientProjects = projects.filter((row) => belongsToClient(row, slug, client!.name, client!.entityId));
+    const clientEntities = entities.filter((row) => belongsToClient(row, slug, client!.name, client!.entityId));
     const total = clientProjects.reduce((sum, row) => sum + Number(row.valor_total ?? 0), 0);
     const paid = clientProjects.reduce((sum, row) => sum + Number(row.valor_pagado ?? 0), 0);
 
@@ -73,6 +87,6 @@ export async function GET(
       return NextResponse.json({ client, live: false, error: error.message, projects: [], entities: [] }, { status: 503 });
     }
     console.error("Client API error:", error);
-    return NextResponse.json({ client, live: false, error: "Error consultando datos del cliente" }, { status: 500 });
+    return NextResponse.json({ client, live: clientsLive, error: "Error consultando datos del cliente" }, { status: 500 });
   }
 }

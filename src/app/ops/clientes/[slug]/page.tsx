@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getClientBySlug } from "@/data/clients";
+import { getLiveClients } from "@/lib/liveClients";
 import ClientLivePanel from "@/components/ClientLivePanel";
 import OpsNav from "@/components/ops/OpsNav";
 
@@ -8,9 +8,21 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
+function cop(value: number): string {
+  if (!value) return "—";
+  return new Intl.NumberFormat("es-CO", {
+    style: "currency",
+    currency: "COP",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export default async function ClienteDetailPage({ params }: Props) {
   const { slug } = await params;
-  const client = getClientBySlug(slug);
+  const { clients, live } = await getLiveClients();
+  const client = clients.find((candidate) => candidate.slug === slug);
 
   if (!client) {
     notFound();
@@ -28,8 +40,11 @@ export default async function ClienteDetailPage({ params }: Props) {
             <div>
               <h1 className="text-4xl font-black mb-2">{client.name}</h1>
               <p className="text-white/50">{client.industry}</p>
+              {client.entityEstado && (
+                <p className="mt-1 text-xs text-white/40">Estado operativo: {client.entityEstado}</p>
+              )}
             </div>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <span
                 className={`px-3 py-1 rounded text-sm ${
                   client.status === "active"
@@ -51,6 +66,9 @@ export default async function ClienteDetailPage({ params }: Props) {
                 }`}
               >
                 Prioridad {client.priority === "high" ? "alta" : client.priority === "medium" ? "media" : "baja"}
+              </span>
+              <span className={`rounded px-3 py-1 text-sm ${live ? "bg-emerald-500/15 text-emerald-300" : "bg-amber-500/15 text-amber-300"}`}>
+                {live ? "EN VIVO" : "RESPALDO"}
               </span>
             </div>
           </div>
@@ -80,11 +98,17 @@ export default async function ClienteDetailPage({ params }: Props) {
                   <dd className="text-white">{client.phone}</dd>
                 </div>
               )}
-              {client.contractValue && (
+              {client.liveValueTotal > 0 && (
                 <div>
-                  <dt className="text-white/40 text-sm">Valor contrato</dt>
-                  <dd className="text-green-400 font-bold">
-                    ${(client.contractValue / 1000000).toFixed(1)}M {client.currency}
+                  <dt className="text-white/40 text-sm">Valor contratado</dt>
+                  <dd className="text-green-400 font-bold">{cop(client.liveValueTotal)}</dd>
+                </div>
+              )}
+              {client.liveValueTotal > 0 && (
+                <div>
+                  <dt className="text-white/40 text-sm">Pagado / pendiente</dt>
+                  <dd className="text-white">
+                    {cop(client.liveValuePaid)} · pendiente {cop(client.liveValuePending)} ({client.paymentProgress}%)
                   </dd>
                 </div>
               )}
@@ -96,9 +120,8 @@ export default async function ClienteDetailPage({ params }: Props) {
               )}
               <div>
                 <dt className="text-white/40 text-sm">Drive</dt>
-                <dd className="text-white/70 text-sm font-mono">{client.drivePath}</dd>
+                <dd className="text-white/70 text-sm font-mono">{client.drivePath || "—"}</dd>
               </div>
-            <OpsNav active="Clientes" />
             </dl>
           </div>
 
@@ -107,60 +130,45 @@ export default async function ClienteDetailPage({ params }: Props) {
             <h2 className="text-lg font-bold mb-4">Links y recursos</h2>
             <div className="space-y-3">
               {client.website && (
-                <a
-                  href={client.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white/70 hover:text-white transition underline underline-offset-4"
-                >
+                <a href={client.website} target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition underline underline-offset-4">
                   🌐 Website →
                 </a>
               )}
               {client.prototypeUrl && (
-                <a
-                  href={client.prototypeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white/70 hover:text-white transition underline underline-offset-4"
-                >
+                <a href={client.prototypeUrl} target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition underline underline-offset-4">
                   🧪 Prototipo →
                 </a>
               )}
               {client.pitchUrl && (
-                <a
-                  href={client.pitchUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white/70 hover:text-white transition underline underline-offset-4"
-                >
+                <a href={client.pitchUrl} target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition underline underline-offset-4">
                   📊 Pitch →
                 </a>
               )}
               {client.repoUrl && (
-                <a
-                  href={client.repoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-white/70 hover:text-white transition underline underline-offset-4"
-                >
+                <a href={client.repoUrl} target="_blank" rel="noopener noreferrer" className="block text-white/70 hover:text-white transition underline underline-offset-4">
                   📦 Repo →
                 </a>
+              )}
+              {!client.website && !client.prototypeUrl && !client.pitchUrl && !client.repoUrl && (
+                <p className="text-white/40 text-sm">Esta entidad aún no tiene enlaces públicos registrados.</p>
               )}
             </div>
           </div>
         </div>
 
         {/* Tags */}
-        <div className="border border-white/10 rounded-lg p-6 mb-8">
-          <h2 className="text-lg font-bold mb-4">Tags</h2>
-          <div className="flex flex-wrap gap-2">
-            {client.tags.map((tag) => (
-              <span key={tag} className="px-3 py-1 bg-white/5 rounded text-sm text-white/60">
-                {tag}
-              </span>
-            ))}
+        {client.tags.length > 0 && (
+          <div className="border border-white/10 rounded-lg p-6 mb-8">
+            <h2 className="text-lg font-bold mb-4">Tags</h2>
+            <div className="flex flex-wrap gap-2">
+              {client.tags.map((tag) => (
+                <span key={tag} className="px-3 py-1 bg-white/5 rounded text-sm text-white/60">
+                  {tag}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Notas */}
         {client.notes && (
@@ -175,7 +183,11 @@ export default async function ClienteDetailPage({ params }: Props) {
         <div className="grid md:grid-cols-2 gap-6 mt-8">
           <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">📈 Métricas</h3>
-            <p className="text-white/50 text-sm">KPIs y resultados se agregan aquí cuando estén disponibles en la fuente de datos.</p>
+            <p className="text-white/50 text-sm">
+              {client.projectCount > 0
+                ? `${client.projectCount} proyecto${client.projectCount === 1 ? "" : "s"} con valor contratado ${cop(client.liveValueTotal)}.`
+                : "KPIs y resultados se agregan aquí cuando estén disponibles en la fuente de datos."}
+            </p>
           </div>
           <div className="border border-white/10 rounded-lg p-6">
             <h3 className="text-white/40 font-bold mb-2">📁 Entregables</h3>
@@ -190,6 +202,8 @@ export default async function ClienteDetailPage({ params }: Props) {
             <p className="text-white/50 text-sm">{client.notes ?? "Sin notas operativas registradas."}</p>
           </div>
         </div>
+
+        <OpsNav active="Clientes" />
       </div>
     </div>
   );
