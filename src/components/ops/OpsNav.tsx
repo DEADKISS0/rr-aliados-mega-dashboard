@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const links = [
+  ["Hoy", "/ops"],
   ["Finanzas", "/ops/finanzas"],
   ["Clientes", "/ops/clientes"],
   ["Desarrollos", "/ops/desarrollos"],

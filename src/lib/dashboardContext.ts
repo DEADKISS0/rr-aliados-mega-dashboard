@@ -2,6 +2,7 @@ import { promises as fs } from "fs";
 import path from "path";
 import { getBusinessContext, formatCop } from "@/data/businessContext";
 import { deals, salesMetrics } from "@/data/salesPipeline";
+import { buildOperationsSnapshot } from "@/lib/operationsSnapshot";
 
 export interface DashboardGrounding {
   text: string;
@@ -31,7 +32,7 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
   const ctx = getBusinessContext();
   const generatedAt = new Date().toISOString();
 
-  const [pred, strat, finance, actionLedger] = await Promise.all([
+  const [pred, strat, finance, actionLedger, liveSnapshot] = await Promise.all([
     readJsonSafe<{ reports?: Array<{ label?: string; date?: string; summary?: Record<string, unknown> }> }>(
       "reports/predicciones_index.json"
     ),
@@ -42,6 +43,7 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
     readJsonSafe<{ actions?: Array<{ title?: string; status?: string; evidence?: unknown[] }> }>(
       "data/action_ledger.json"
     ),
+    buildOperationsSnapshot(),
   ]);
 
   const latestPred = pred?.reports?.[0];
@@ -62,11 +64,16 @@ export async function buildDashboardGrounding(): Promise<DashboardGrounding> {
   const text = [
     `CONTEXTO VIVO RR ALIADOS (${generatedAt})`,
     `Capital: ${formatCop(ctx.capitalCop)} · Burn/mes: ${formatCop(ctx.monthlyBurnCop)} · Runway: ~${ctx.runwayDays} días (~${Math.floor(ctx.runwayMonths)} meses)`,
+    `OPERACIÓN CALCULADA: ${liveSnapshot.summary}`,
+    `FUENTES: Supabase=${liveSnapshot.sources.supabase} · DashWeb=${liveSnapshot.sources.dashweb} · Directorio=${liveSnapshot.sources.directory} · generado=${liveSnapshot.generatedAt}`,
+    `DATOS FINANCIEROS: Disponible=${formatCop(liveSnapshot.finance.available ?? ctx.capitalCop)} · Burn=${formatCop(liveSnapshot.finance.burn ?? ctx.monthlyBurnCop)} · Runway=${liveSnapshot.finance.runwayMonths?.toFixed(1) ?? "n/d"} meses`,
+    `PROYECTOS SUPABASE: ${liveSnapshot.counts.projects} · TAREAS ABIERTAS DASHWEB: ${liveSnapshot.counts.openTasks} · BLOQUEADAS: ${liveSnapshot.counts.blockedTasks}`,
+    liveSnapshot.alerts.length ? `ALERTAS DETERMINÍSTICAS: ${liveSnapshot.alerts.map((alert) => `${alert.severity.toUpperCase()} ${alert.title}: ${alert.detail}`).join(" | ")}` : "ALERTAS DETERMINÍSTICAS: ninguna",
     `Q3 clientes: ${ctx.clientsClosed}/${ctx.clientsTargetQ3} · MRR actual: ${ctx.meta5Year.currentMrr} · Meta Q3 MRR: ${ctx.meta5Year.q3MrrTarget}`,
     `Wuunder deadline: ${ctx.wuunderDeadline} (${ctx.wuunderDaysLeft} días) · MRR est. si cierra: ${formatCop(ctx.wuunderExpectedMrrCop)}`,
     `Meta 5 años: ${ctx.meta5Year.horizon} → ${ctx.meta5Year.targetMrr} / ${ctx.meta5Year.targetClients} clientes`,
     finance?.updatedAt ? `Finance snapshot: ${finance.updatedAt}${finance.notes ? ` — ${finance.notes}` : ""}` : "",
-    `PIPELINE INTERNO (snapshot TS — NO CRM):`,
+    `PIPELINE EDITORIAL LEGACY (snapshot TS — no sustituye fuentes vivas):`,
     metricsLine,
     dealLines,
     `ÚLTIMO REPORTE PREDICCIONES: ${latestPred?.label || latestPred?.date || "n/d"} · cambios=${String(latestPred?.summary?.total_changes ?? "n/d")} riesgos=${String(latestPred?.summary?.risks ?? "n/d")}`,
