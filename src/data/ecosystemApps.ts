@@ -18,16 +18,15 @@ export interface EcosystemApp {
 
 /**
  * Ecosistema interno consolidado (según definición de Rosas 2026-09-10).
- * Se retiraron: Mega Dashboard (es este sitio), Primer Contacto Web,
- * RR Skills Hub (quedó dentro del propio Hub), Company Hub, Adquisición
- * Clientes y Cuentas de Cobro. Se mantienen por el momento: RR Finanzas y
- * RR Cotizador, más los desarrollos internos vigentes.
+ * Se retiraron de la navegación principal las herramientas experimentales.
+ * Finanzas vive ahora dentro de este Mega Dashboard; los enlaces externos
+ * antiguos se mantienen solo como referencia histórica durante la transición.
  */
 export const ECOSYSTEM_APPS: EcosystemApp[] = [
   {
     id: "rr-finanzas",
     title: "RR Finanzas",
-    url: "https://rr-finanzas.vercel.app/",
+    url: "/login?next=%2Fops%2Ffinanzas",
     icon: "💰",
     blurb: "Caja, runway, cuentas de cobro y proyecciones",
     deepLinkPrimary: true,

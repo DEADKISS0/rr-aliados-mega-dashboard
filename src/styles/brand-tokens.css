@@ -80,6 +80,24 @@
   --warning: #DED116;
   --danger: #BE076D;
 
+  /* Compatibility aliases used by the integrated finance module. */
+  --background: var(--bg-primary);
+  --foreground: var(--text-primary);
+  --card: var(--bg-card);
+  --card-foreground: var(--text-primary);
+  --muted: var(--bg-secondary);
+  --muted-foreground: var(--text-secondary);
+  --primary: var(--ember);
+  --primary-foreground: var(--parchment);
+  --secondary: var(--void);
+  --secondary-foreground: var(--parchment);
+  --gold: var(--mustard);
+  --glow: rgba(190, 7, 109, 0.3);
+  --radius-input: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-modal: var(--radius-xl);
+  --radius-hero: 28px;
+
   /* Ambient mesh */
   --mesh-ember: radial-gradient(ellipse 80% 60% at 85% 10%, rgba(190, 7, 109, 0.18) 0%, transparent 60%);
   --mesh-void: radial-gradient(ellipse 60% 50% at 10% 90%, rgba(151, 61, 143, 0.2) 0%, transparent 55%);

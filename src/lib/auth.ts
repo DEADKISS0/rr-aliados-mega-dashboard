@@ -152,6 +152,11 @@ const OPS_ONLY_API_PREFIXES = [
   "/api/entities",
   "/api/demos",
   "/api/client",
+  // Financial core uses server-side Supabase credentials and is ops-only.
+  "/api/db",
+  "/api/cuentas-cobro",
+  "/api/personas-cobro",
+  "/api/documentos",
 ];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {

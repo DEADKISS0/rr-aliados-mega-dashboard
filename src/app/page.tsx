@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 const DEVELOPMENTS = [
-  ["RR Finanzas", "Caja, runway, cuentas de cobro y proyecciones conectadas.", "https://rr-finanzas.vercel.app/", "01"],
+  ["RR Finanzas", "Caja, runway, cuentas de cobro y proyecciones conectadas.", "/login?next=%2Fops%2Ffinanzas", "01"],
   ["RR Kotizador", "Cotizaciones, precios dinámicos y cronogramas automáticos.", "https://rr-kotizador.vercel.app/", "02"],
   ["DashWeb Core", "ERP/CRM para proyectos, tareas, RRHH, facturación y OKRs.", "https://dashweb-core-frontend-beta.up.railway.app/login", "03"],
   ["SaaS Vertical Hub", "CRM y demos personalizadas para verticales de negocio.", "https://rr-saas-vertical.vercel.app/", "04"],
