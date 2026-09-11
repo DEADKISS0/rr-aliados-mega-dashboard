@@ -38,7 +38,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   const tabla = await tableFrom(request, params);
   if (tabla === 'unauthorized') return NextResponse.json({ ok: false, error: 'admin_required' }, { status: 401 });
   if (!tabla) return NextResponse.json({ ok: false, error: 'tabla_no_permitida' }, { status: 404 });
-  const payload = cleanPayload(tabla, await request.json());
+  const payload = cleanPayload(tabla, await request.json().catch(() => null));
   if (!payload) return NextResponse.json({ ok: false, error: 'payload_invalido' }, { status: 400 });
   const supabase = getSupabaseServer();
   if (!supabase) return NextResponse.json({ ok: true, source: 'local-only', record: payload });
@@ -51,8 +51,8 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const tabla = await tableFrom(request, params);
   if (tabla === 'unauthorized') return NextResponse.json({ ok: false, error: 'admin_required' }, { status: 401 });
   if (!tabla) return NextResponse.json({ ok: false, error: 'tabla_no_permitida' }, { status: 404 });
-  const body = await request.json();
-  if (!body?.id) return NextResponse.json({ ok: false, error: 'id_requerido' }, { status: 400 });
+  const body = (await request.json().catch(() => null)) as (Record<string, unknown> & { id?: string }) | null;
+  if (!body || typeof body !== 'object' || !body.id) return NextResponse.json({ ok: false, error: 'id_requerido' }, { status: 400 });
   const payload = cleanPayload(tabla, body);
   if (!payload) return NextResponse.json({ ok: false, error: 'payload_invalido' }, { status: 400 });
   const supabase = getSupabaseServer();

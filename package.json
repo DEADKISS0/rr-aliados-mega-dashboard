@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "check:embeds": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_ecosystem_embeds.ps1",
-    "predeploy:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_ecosystem_embeds.ps1"
+    "predeploy:check": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/check_ecosystem_embeds.ps1",
+    "test": "node --test 'src/**/*.test.ts'"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",

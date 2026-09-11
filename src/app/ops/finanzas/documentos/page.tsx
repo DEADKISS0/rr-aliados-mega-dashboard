@@ -95,8 +95,21 @@ export default function DocumentosPage() {
 
   const eliminar = async (id: string) => {
     if (!confirm('¿Eliminar este documento del índice?')) return;
-    setDocs((prev) => prev.filter((d) => d.id !== id));
-    setStatus('Eliminado del índice local. La BD se sincroniza al recargar.');
+    // Id local (aún sin persistir): solo se quita de la vista.
+    if (id.startsWith('local-')) {
+      setDocs((prev) => prev.filter((d) => d.id !== id));
+      setStatus('Documento local quitado de la vista.');
+      return;
+    }
+    try {
+      const res = await fetch(`/api/documentos?id=${encodeURIComponent(id)}`, { method: 'DELETE' });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.error || 'No se pudo eliminar');
+      setDocs((prev) => prev.filter((d) => d.id !== id));
+      setStatus('Documento eliminado del índice.');
+    } catch (e) {
+      setStatus((e as Error).message || 'Error al eliminar');
+    }
   };
 
   const badgeTipo = (t: string) => {

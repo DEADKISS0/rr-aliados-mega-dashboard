@@ -24,21 +24,8 @@ export async function resolveBackupPassword(password: string): Promise<boolean> 
   return timingSafeEqual(new Uint8Array(expected), new Uint8Array(actual));
 }
 
-const SENSITIVE_API_PREFIXES = [
-  "/api/automation",
-  "/api/regenerate",
-  "/api/chat",
-  "/api/metricool",
-  "/api/dashweb/users",
-];
-
 export function authConfigured(): boolean {
   return Boolean(process.env.AUTH_SECRET?.trim());
-}
-
-export function roleAllowsApi(role: DashboardRole, pathname: string): boolean {
-  if (role === "ops") return true;
-  return !SENSITIVE_API_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 }
 
 function b64urlBytes(bytes: Uint8Array): string {
@@ -143,7 +130,10 @@ const PUBLIC_API_PREFIXES = [
 // APIs SOLO para ops (admin). El resto de APIs no-públicas quedan disponibles
 // para secretario (client/pitch) y ops.
 const OPS_ONLY_API_PREFIXES = [
-  "/api/dashweb/users",
+  // Centro operativo: el briefing y las propuestas de operación (que escriben
+  // en cash_movements) son exclusivos de ops.
+  "/api/ops",
+  "/api/dashweb",
   "/api/pipeline",
   "/api/chat",
   "/api/regenerate",
@@ -160,6 +150,11 @@ const OPS_ONLY_API_PREFIXES = [
   "/api/personas-cobro",
   "/api/documentos",
   "/api/supervisor",
+  // Señales internas del dashboard (calendario, ledger de acciones y reportes
+  // estratégicos) no deben exponerse a roles de secretario.
+  "/api/calendar",
+  "/api/action-proposals",
+  "/api/optimizacion-index",
 ];
 
 function matchesPrefix(pathname: string, prefixes: string[]): boolean {

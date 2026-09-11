@@ -46,7 +46,10 @@ export async function PATCH(request: NextRequest) {
   if (!requireAdmin(request)) {
     return NextResponse.json({ ok: false, error: 'admin_required' }, { status: 401 });
   }
-  const body = (await request.json()) as PersonaCobro & { id?: string };
+  const body = (await request.json().catch(() => null)) as (PersonaCobro & { id?: string }) | null;
+  if (!body || typeof body !== 'object') {
+    return NextResponse.json({ ok: false, error: 'payload_invalido' }, { status: 400 });
+  }
   const supabase = getSupabaseServer();
   if (!supabase) return NextResponse.json({ ok: false, error: 'no_supabase' }, { status: 500 });
 

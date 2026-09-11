@@ -13,7 +13,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: 'admin_required' }, { status: 401 });
   }
 
-  const payload = (await request.json()) as CuentaCobroPayload;
+  const payload = (await request.json().catch(() => null)) as CuentaCobroPayload | null;
+  if (!payload || typeof payload !== 'object') {
+    return NextResponse.json({ ok: false, error: 'payload_invalido' }, { status: 400 });
+  }
   const pdf = await buildCuentaCobroPdf(payload);
   const filename = `${payload.numero || 'RR-CC-BORRADOR'}-v${payload.version || 1}.pdf`;
 
