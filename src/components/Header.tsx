@@ -7,6 +7,7 @@ import NotificationCenter from "./NotificationCenter";
 import { usePresentationMode } from "@/contexts/PresentationModeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import PitchPackButton from "@/components/ui/PitchPackButton";
+import { BRAND } from "@/lib/brand";
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -68,7 +69,7 @@ export default function Header({
             style={{ border: "1px solid var(--border-accent)", boxShadow: "var(--shadow-ember-sm)" }}
           >
             <Image
-              src="/brand/logo.svg"
+              src={BRAND.logo}
               alt="RR ALIADOS"
               width={40}
               height={40}

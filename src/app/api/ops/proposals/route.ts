@@ -15,7 +15,18 @@ export async function GET() {
   const supabase = getSupabaseServer();
   if (!supabase) return NextResponse.json({ ok: true, source: "not_configured", proposals: [] });
   const { data, error } = await supabase.from("operation_proposals").select("*").eq("status", "pending").order("created_at", { ascending: false }).limit(50);
-  if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  if (error) {
+    // Migracion pendiente: la tabla aun no existe en este entorno. No es un fallo del dashboard.
+    if (/schema cache|does not exist/i.test(error.message)) {
+      return NextResponse.json({
+        ok: true,
+        source: "migration_pending",
+        proposals: [],
+        note: "Aplicar supabase/migrations/20260911_operation_proposals.sql para habilitar propuestas.",
+      });
+    }
+    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  }
   return NextResponse.json({ ok: true, source: "supabase", proposals: data ?? [] });
 }
 

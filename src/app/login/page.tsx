@@ -3,6 +3,7 @@
 import { Suspense, useState, FormEvent, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { BRAND } from "@/lib/brand";
 
 function LoginForm() {
   const router = useRouter();
@@ -140,7 +141,7 @@ export default function LoginPage() {
       }}
     >
       <Link href="/" className="mb-6 inline-flex items-center gap-2" style={{ color: "#FFFFF3", textDecoration: "none" }}>
-        <img src="/brand/rr/simbolo_transparent_fucsia.png" alt="" width={28} height={28} />
+        <img src={BRAND.symbolFucsia} alt="" width={28} height={28} />
         <span className="font-display tracking-widest" style={{ color: "#FFFFF3" }}>RR ALIADOS</span>
       </Link>
       <Suspense fallback={<p className="text-sm" style={{ color: "#FFFFF3" }}>Cargando…</p>}>

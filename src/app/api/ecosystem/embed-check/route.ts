@@ -92,6 +92,22 @@ export async function GET() {
   const results: EmbedProbe[] = [];
 
   for (const app of ECOSYSTEM_APPS) {
+    // Una ruta interna (mismo origen) no se puede sondear por red: es embebible por definición.
+    if (app.url.startsWith("/")) {
+      results.push({
+        id: app.id,
+        title: app.title,
+        url: app.url,
+        configuredEmbed: app.embed,
+        httpStatus: 200,
+        xFrameOptions: null,
+        frameAncestors: null,
+        headersAllowEmbed: true,
+        verdict: "ok",
+        detail: "Ruta interna del propio dashboard (mismo origen)",
+      });
+      continue;
+    }
     const { status, xfo, csp } = await probeUrl(app.url);
     const fa = parseFrameAncestors(csp);
     if (status === null) {

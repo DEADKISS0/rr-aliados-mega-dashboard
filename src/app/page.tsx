@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { CLIENTS } from "@/data/clients";
 import { DEVELOPMENTS } from "@/data/developments";
+import { BRAND } from "@/lib/brand";
 
 export const metadata: Metadata = {
   title: "RR ALIADOS — Growth Partner",
@@ -15,11 +16,11 @@ export default function LandingPage() {
   return (
     <main className="landing-shell">
       <nav className="landing-nav">
-        <Link href="/" className="brand-lockup" aria-label="RR Aliados inicio"><img src="/brand/rr/simbolo_transparent_fucsia.png" alt="" className="brand-symbol" /><span>RR ALIADOS</span></Link>
+        <Link href="/" className="brand-lockup" aria-label="RR Aliados inicio"><img src={BRAND.symbolFucsia} alt="" className="brand-symbol" /><span>RR ALIADOS</span></Link>
         <div className="landing-nav__links"><a href="#desarrollos">Desarrollos</a><a href="#clientes">Clientes</a><a href="#metodo">Método</a><Link href="/login" className="brand-button brand-button--small">Acceso interno ↗</Link></div>
       </nav>
 
-      <section className="landing-hero"><div className="hero-mark">[ RR / GROWTH_PARTNER ]</div><div className="hero-grid"><div className="hero-copy"><p className="eyebrow">ESTRATEGIA · ARQUITECTURA · EJECUCIÓN</p><h1>Con las manos<br /><em>en el fuego.</em></h1><p className="hero-lede">No entregamos archivos. Construimos sistemas de crecimiento con criterio visual, tecnología y datos sobre la mesa.</p><div className="hero-actions"><a href="#desarrollos" className="brand-button">Ver el ecosistema ↓</a><a href="#contacto" className="brand-button brand-button--ghost">Iniciar conversación ↗</a></div></div><div className="hero-panel" aria-label="Manifiesto RR Aliados"><img src="/brand/rr/simbolo_transparent_mostaza.png" alt="Símbolo RR Aliados" className="hero-symbol" /><div className="hero-panel__line"><span>STATUS</span><b>ACTIVE_MANIFESTO</b></div><div className="hero-panel__line"><span>MODE</span><b>AI_FIRST / HUMAN_LED</b></div><div className="hero-panel__line"><span>RULE</span><b>TRANSPARENCIA RADICAL</b></div><p>“La cuerda de tres hilos no se rompe fácil.”</p></div></div></section>
+      <section className="landing-hero"><div className="hero-mark">[ RR / GROWTH_PARTNER ]</div><div className="hero-grid"><div className="hero-copy"><p className="eyebrow">ESTRATEGIA · ARQUITECTURA · EJECUCIÓN</p><h1>Con las manos<br /><em>en el fuego.</em></h1><p className="hero-lede">No entregamos archivos. Construimos sistemas de crecimiento con criterio visual, tecnología y datos sobre la mesa.</p><div className="hero-actions"><a href="#desarrollos" className="brand-button">Ver el ecosistema ↓</a><a href="#contacto" className="brand-button brand-button--ghost">Iniciar conversación ↗</a></div></div><div className="hero-panel" aria-label="Manifiesto RR Aliados"><img src={BRAND.symbolMostaza} alt="Símbolo RR Aliados" className="hero-symbol" /><div className="hero-panel__line"><span>STATUS</span><b>ACTIVE_MANIFESTO</b></div><div className="hero-panel__line"><span>MODE</span><b>AI_FIRST / HUMAN_LED</b></div><div className="hero-panel__line"><span>RULE</span><b>TRANSPARENCIA RADICAL</b></div><p>“La cuerda de tres hilos no se rompe fácil.”</p></div></div></section>
 
       <section className="landing-stats" aria-label="Indicadores RR Aliados"><div><strong>{DEVELOPMENTS.length}+</strong><span>desarrollos activos</span></div><div><strong>{CLIENTS.length}</strong><span>clientes y prospectos</span></div><div><strong>35+</strong><span>skills orquestadas</span></div><div><strong>100%</strong><span>AI First</span></div></section>
 
@@ -29,7 +30,7 @@ export default function LandingPage() {
 
       <section id="metodo" className="landing-section method-section"><p className="eyebrow">03 / FORMA DE TRABAJO</p><h2>Vanguardia como<br /><span>ventaja operativa.</span></h2><div className="method-grid"><div><b>01</b><h3>Inmersión total</h3><p>Conocemos tus números, cuellos de botella y ambición antes de proponer.</p></div><div><b>02</b><h3>AI First</h3><p>La inteligencia artificial acelera la ejecución; el criterio humano decide el rumbo.</p></div><div><b>03</b><h3>Resultados medibles</h3><p>Métricas abiertas, decisiones claras y operación visible.</p></div></div></section>
 
-      <section id="contacto" className="landing-cta"><img src="/brand/rr/simbolo_transparent_blanco.png" alt="" className="cta-symbol" /><p className="eyebrow">[ INITIATING_ALLIANCE ]</p><h2>¿Crecemos juntos?</h2><a href="mailto:rraliadosteam@gmail.com" className="brand-button brand-button--mustard">Agendar conversación ↗</a></section>
+      <section id="contacto" className="landing-cta"><img src={BRAND.symbolBlanco} alt="" className="cta-symbol" /><p className="eyebrow">[ INITIATING_ALLIANCE ]</p><h2>¿Crecemos juntos?</h2><a href="mailto:rraliadosteam@gmail.com" className="brand-button brand-button--mustard">Agendar conversación ↗</a></section>
       <footer className="landing-footer"><span>© 2026 RR ALIADOS S.A.S. — Envigado, Colombia</span><span>CON LAS MANOS EN EL FUEGO.</span><Link href="/login">Acceso interno ↗</Link></footer>
     </main>
   );

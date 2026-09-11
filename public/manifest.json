@@ -1,24 +1,30 @@
 {
-  "name": "RR ALIADOS Mega Dashboard",
-  "short_name": "Mega Dashboard",
+  "name": "RR ALIADOS — Mega Dashboard",
+  "short_name": "RR ALIADOS",
   "description": "Centro de comando RR ALIADOS — Con las manos en el fuego.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0F0F0F",
-  "theme_color": "#CE3D1F",
+  "background_color": "#070001",
+  "theme_color": "#be076d",
   "lang": "es",
   "icons": [
     {
-      "src": "/brand/favicon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "src": "https://ntgtvtzbjwotuwkiflar.supabase.co/storage/v1/object/public/brand-assets/rr/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/brand/logo.svg",
+      "src": "https://ntgtvtzbjwotuwkiflar.supabase.co/storage/v1/object/public/brand-assets/rr/favicon-512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "https://ntgtvtzbjwotuwkiflar.supabase.co/storage/v1/object/public/brand-assets/rr/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
