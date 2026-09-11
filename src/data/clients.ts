@@ -11,6 +11,7 @@ export interface Client {
   prototypeUrl?: string;
   pitchUrl?: string;
   repoUrl?: string;
+  instagram?: string;
   drivePath: string;
   contractValue?: number;
   currency?: string;
@@ -38,10 +39,12 @@ export const CLIENTS: Client[] = [
   },
   {
     slug: "satiro-sushi",
-    name: "Satiro Sushi",
+    name: "Sátiro Sushi",
     industry: "Restaurante / Gastronomía",
     status: "active",
     priority: "high",
+    prototypeUrl: "https://landing-satiro-demo-production.up.railway.app/",
+    instagram: "https://www.instagram.com/satirosushi/",
     drivePath: "rr_aliados/06_Clientes/Satiro_Sushi",
     contractValue: 12000000,
     currency: "COP",
@@ -62,6 +65,65 @@ export const CLIENTS: Client[] = [
     currency: "COP",
     tags: ["panaderia", "saas-vertical", "landing", "rebrand"],
     notes: "Cliente activo. Contrato $1.2M. Rebrand Junisama → BOGA.",
+  },
+  {
+    slug: "harbin",
+    name: "Harbin",
+    industry: "Restaurante / Gastronomía",
+    status: "prospect",
+    priority: "medium",
+    prototypeUrl: "https://landing-harbin-demo-production.up.railway.app/",
+    instagram: "https://www.instagram.com/harbinrestaurantes/",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["restaurante", "gastronomia", "prototipo-web"],
+    notes: "Prototipo en Railway. Ficha comercial por completar.",
+  },
+  {
+    slug: "charly-brown",
+    name: "CharlyBrown",
+    industry: "Entretenimiento / Billar",
+    status: "prospect",
+    priority: "medium",
+    prototypeUrl: "https://landing-charly-demo-production-8ab7.up.railway.app/",
+    instagram: "https://www.instagram.com/charlybrawnbillarclub/",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["entretenimiento", "billar", "prototipo-web"],
+    notes: "Charly Brown Billar Club. Prototipo en Railway.",
+  },
+  {
+    slug: "candilejas",
+    name: "Candilejas",
+    industry: "Entretenimiento / Restaurante",
+    status: "prospect",
+    priority: "medium",
+    prototypeUrl: "https://landing-candilejas-demo-production.up.railway.app/",
+    instagram: "https://www.instagram.com/candilejasccentral/",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["entretenimiento", "restaurante", "prototipo-web"],
+    notes: "Prototipo en Railway. Ficha comercial por completar.",
+  },
+  {
+    slug: "la-carreta",
+    name: "La Carreta",
+    industry: "Restaurante / Gastronomía",
+    status: "prospect",
+    priority: "medium",
+    prototypeUrl: "https://landing-carreta-demo-production.up.railway.app/",
+    instagram: "https://www.instagram.com/lacarretazipaquira/",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["restaurante", "gastronomia", "prototipo-web"],
+    notes: "La Carreta (Zipaquirá). Prototipo en Railway.",
+  },
+  {
+    slug: "mar-y-tierra",
+    name: "Mar y Tierra",
+    industry: "Restaurante / Gastronomía",
+    status: "prospect",
+    priority: "medium",
+    prototypeUrl: "https://landing-marytierra-demo-production.up.railway.app/",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["restaurante", "gastronomia", "prototipo-web"],
+    notes: "Prototipo en Railway. Ficha comercial por completar.",
   },
   {
     slug: "siraitia",
@@ -102,6 +164,16 @@ export const CLIENTS: Client[] = [
     drivePath: "rr_aliados/06_Clientes/Numa_Wagyu",
     tags: ["gastronomia", "premium", "wagyu"],
     notes: "Prospecto premium.",
+  },
+  {
+    slug: "arvin",
+    name: "Arvin",
+    industry: "Por clasificar",
+    status: "prospect",
+    priority: "low",
+    drivePath: "rr_aliados/02_Ventas/Prospectos",
+    tags: ["pendiente-ficha"],
+    notes: "Cliente/prospecto mencionado por Rosas (nombre exacto por confirmar).",
   },
   {
     slug: "real-seguros",
@@ -158,46 +230,6 @@ export const CLIENTS: Client[] = [
     tags: ["agro", "b2b", "b2g", "catalogo", "prototipo-web"],
     notes: "Prototipo público registrado en Deploys_Indexer; ficha comercial por completar.",
   },
-  {
-    slug: "arvin",
-    name: "Arvin",
-    industry: "Por clasificar",
-    status: "prospect",
-    priority: "low",
-    drivePath: "rr_aliados/02_Ventas/Prospectos",
-    tags: ["pendiente-ficha"],
-    notes: "Cliente/prospecto mencionado por Rosas (nombre exacto por confirmar).",
-  },
-  {
-    slug: "charles-brown",
-    name: "Charles Brown",
-    industry: "Por clasificar",
-    status: "prospect",
-    priority: "low",
-    drivePath: "rr_aliados/02_Ventas/Prospectos",
-    tags: ["pendiente-ficha"],
-    notes: "Nombre mencionado por Rosas; falta confirmar si corresponde a Charly Brown Billar Club y vincular fuente.",
-  },
-  {
-    slug: "la-carreta",
-    name: "La Carreta",
-    industry: "Por clasificar",
-    status: "prospect",
-    priority: "low",
-    drivePath: "rr_aliados/02_Ventas/Prospectos",
-    tags: ["pendiente-ficha"],
-    notes: "Cliente/prospecto mencionado por Rosas; falta vincular fuente, desarrollo y estado verificable.",
-  },
-  {
-    slug: "maritierra",
-    name: "Maritierra",
-    industry: "Por clasificar",
-    status: "prospect",
-    priority: "low",
-    drivePath: "rr_aliados/02_Ventas/Prospectos",
-    tags: ["pendiente-ficha"],
-    notes: "Cliente/prospecto mencionado por Rosas; falta vincular fuente, desarrollo y estado verificable.",
-  },
 ];
 
 export function getClientBySlug(slug: string): Client | undefined {
@@ -217,7 +249,7 @@ export function getProspects(): Client[] {
 }
 
 export function getClientsWithPrototype(): Client[] {
-  return CLIENTS.filter((c) => c.prototypeUrl || c.website);
+  return CLIENTS.filter((c) => Boolean(c.prototypeUrl || c.website));
 }
 
 export function getClientsWithoutPrototype(): Client[] {
