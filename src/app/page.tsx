@@ -1,305 +1,48 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import { CLIENTS } from "@/data/clients";
 
 export const metadata: Metadata = {
-  title: "RR ALIADOS — Brutalismo Estratégico Colombiano",
-  description:
-    "Growth partner boutique. AI First. Resultados medibles. Estrategia, desarrollo, contenido y datos para hacer crecer tu negocio.",
+  title: "RR ALIADOS — Growth Partner",
+  description: "Estrategia, desarrollo y datos para convertir marcas con potencial en sistemas de crecimiento.",
 };
 
 const DEVELOPMENTS = [
-  {
-    id: "mega-dashboard",
-    title: "Mega Dashboard",
-    description: "Centro de comando centralizado. Métricas, reportes IA, pipeline y skills en un solo lugar.",
-    url: "https://rr-aliados-mega-dashboard.vercel.app/",
-    icon: "🎯",
-    tags: ["nextjs", "ia", "dashboard"],
-  },
-  {
-    id: "rr-finanzas",
-    title: "RR Finanzas",
-    description: "Dashboard financiero en tiempo real. Caja, runway, cuentas de cobro y proyecciones.",
-    url: "https://rr-finanzas.vercel.app/",
-    icon: "💰",
-    tags: ["finanzas", "nextjs", "supabase"],
-  },
-  {
-    id: "rr-kotizador",
-    title: "RR Kotizador",
-    description: "Cotizador de servicios con precios dinámicos y cronogramas automáticos de pago.",
-    url: "https://rr-kotizador.vercel.app/",
-    icon: "🧮",
-    tags: ["ventas", "cotizador", "automatizacion"],
-  },
-  {
-    id: "primer-contacto",
-    title: "Primer Contacto Web",
-    description: "App de captura de prospectos: leads y registro de entrevistas estructuradas.",
-    url: "https://primer-contacto-web.vercel.app/",
-    icon: "📋",
-    tags: ["crm", "leads", "nextjs"],
-  },
-  {
-    id: "dashweb",
-    title: "DashWeb Core",
-    description: "ERP/CRM interno. Proyectos, tareas, RRHH, CRM, facturación y OKRs.",
-    url: "https://dashweb-core-frontend-beta.up.railway.app/login",
-    icon: "🔧",
-    tags: ["erp", "crm", "railway"],
-  },
-  {
-    id: "skills-hub",
-    title: "RR Skills Hub",
-    description: "Catálogo y gestión de skills de IA del equipo. 35+ skills orquestadas.",
-    url: "https://rr-skills-hub.vercel.app/",
-    icon: "📚",
-    tags: ["ia", "skills", "catalogo"],
-  },
-  {
-    id: "saas-vertical",
-    title: "SaaS Vertical Hub",
-    description: "CRM panaderías + pipeline + demos personalizadas. Backend Supabase.",
-    url: "https://rr-saas-vertical.vercel.app/",
-    icon: "🥐",
-    tags: ["saas", "crm", "supabase"],
-  },
-  {
-    id: "altruismo",
-    title: "Altruismo",
-    description: "Suite de herramientas web sin anuncios, creada por la comunidad.",
-    url: "https://altruismo-web.vercel.app/es",
-    icon: "🤝",
-    tags: ["comunidad", "herramientas", "web"],
-  },
+  ["Mega Dashboard", "Centro de comando para métricas, reportes IA, pipeline y operación.", "https://rr-aliados-mega-dashboard.vercel.app/", "01"],
+  ["RR Finanzas", "Caja, runway, cuentas de cobro y proyecciones conectadas.", "https://rr-finanzas.vercel.app/", "02"],
+  ["RR Kotizador", "Cotizaciones, precios dinámicos y cronogramas automáticos.", "https://rr-kotizador.vercel.app/", "03"],
+  ["Primer Contacto Web", "Captura estructurada de leads y entrevistas comerciales.", "https://primer-contacto-web.vercel.app/", "04"],
+  ["DashWeb Core", "ERP/CRM para proyectos, tareas, RRHH, facturación y OKRs.", "https://dashweb-core-frontend-beta.up.railway.app/login", "05"],
+  ["RR Skills Hub", "Catálogo y orquestación de herramientas de inteligencia artificial.", "https://yvapiyrswankg.kimi.page/", "06"],
+  ["SaaS Vertical Hub", "CRM y demos personalizadas para verticales de negocio.", "https://rr-saas-vertical.vercel.app/", "07"],
+  ["Altruismo", "Suite de herramientas web sin anuncios para la comunidad.", "https://altruismo-web.vercel.app/es", "08"],
+  ["Company Hub", "Hub de conocimiento y herramientas corporativas RR.", "https://x3hlysjfyb4ta.kimi.page/", "09"],
+  ["Adquisición Clientes", "Panel de adquisición y playbook comercial.", "https://3mpm6kcgvmpz4.kimi.page/#panel", "10"],
+  ["Cuenta de Cobro", "Generación operativa de cuentas de cobro para colaboradores.", "https://jzvemwtafnfcw.kimi.page/", "11"],
 ];
 
-const CLIENTS = [
-  { name: "Wuundeer", industry: "B2B Mayorista confección", status: "Prospecto", url: "https://wuundeer-prototype.vercel.app/" },
-  { name: "Satiro Sushi", industry: "Restaurante", status: "Cliente activo" },
-  { name: "BOGA", industry: "Panadería / SaaS", status: "Cliente activo", url: "https://junisama.com.co/" },
-  { name: "Siraitia", industry: "Agro exportación", status: "Prospecto" },
-  { name: "Real Seguros", industry: "Corredora seguros", status: "Prototipo", url: "https://real-seguros-web.vercel.app/" },
-  { name: "Café Angústula", industry: "Finca cafetera", status: "Prototipo", url: "https://augustula-cafe.vercel.app/" },
-];
+const statusLabel = { active: "Activo", prospect: "Prospecto", closed: "Cerrado", paused: "Pausado" } as const;
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      {/* Nav */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-[#0a0a0f]/80 backdrop-blur">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="text-2xl font-black tracking-tight">RR ALIADOS</span>
-            <span className="text-xs text-white/50 hidden sm:block">Brutalismo Estratégico Colombiano</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <a href="#desarrollos" className="text-sm text-white/70 hover:text-white transition">Desarrollos</a>
-            <a href="#clientes" className="text-sm text-white/70 hover:text-white transition">Clientes</a>
-            <a href="#metodo" className="text-sm text-white/70 hover:text-white transition">Método</a>
-            <Link
-              href="/login"
-              className="px-4 py-2 text-sm font-medium bg-white text-black rounded hover:bg-white/90 transition"
-            >
-              Acceso interno
-            </Link>
-          </div>
-        </div>
+    <main className="landing-shell">
+      <nav className="landing-nav">
+        <Link href="/" className="brand-lockup" aria-label="RR Aliados inicio"><img src="/brand/rr/simbolo_transparent_fucsia.png" alt="" className="brand-symbol" /><span>RR ALIADOS</span></Link>
+        <div className="landing-nav__links"><a href="#desarrollos">Desarrollos</a><a href="#clientes">Clientes</a><a href="#metodo">Método</a><Link href="/login" className="brand-button brand-button--small">Acceso interno ↗</Link></div>
       </nav>
 
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="max-w-4xl">
-            <h1 className="text-6xl md:text-8xl font-black leading-[0.9] tracking-tight mb-6">
-              Con las manos<br />en el fuego.
-            </h1>
-            <p className="text-xl md:text-2xl text-white/60 max-w-2xl mb-8">
-              Growth partner boutique. AI First. Resultados medibles.
-              Estrategia, desarrollo, contenido y datos para hacer crecer tu negocio.
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#desarrollos"
-                className="px-8 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition"
-              >
-                Ver desarrollos
-              </a>
-              <a
-                href="#clientes"
-                className="px-8 py-4 border border-white/20 text-white font-bold rounded hover:bg-white/10 transition"
-              >
-                Nuestros clientes
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="landing-hero"><div className="hero-mark">[ RR / GROWTH_PARTNER ]</div><div className="hero-grid"><div className="hero-copy"><p className="eyebrow">ESTRATEGIA · ARQUITECTURA · EJECUCIÓN</p><h1>Con las manos<br /><em>en el fuego.</em></h1><p className="hero-lede">No entregamos archivos. Construimos sistemas de crecimiento con criterio visual, tecnología y datos sobre la mesa.</p><div className="hero-actions"><a href="#desarrollos" className="brand-button">Ver el ecosistema ↓</a><a href="#contacto" className="brand-button brand-button--ghost">Iniciar conversación ↗</a></div></div><div className="hero-panel" aria-label="Manifiesto RR Aliados"><img src="/brand/rr/simbolo_transparent_mostaza.png" alt="Símbolo RR Aliados" className="hero-symbol" /><div className="hero-panel__line"><span>STATUS</span><b>ACTIVE_MANIFESTO</b></div><div className="hero-panel__line"><span>MODE</span><b>AI_FIRST / HUMAN_LED</b></div><div className="hero-panel__line"><span>RULE</span><b>TRANSPARENCIA RADICAL</b></div><p>“La cuerda de tres hilos no se rompe fácil.”</p></div></div></section>
 
-      {/* Stats */}
-      <section className="border-y border-white/10 py-12 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8">
-          <div>
-            <div className="text-4xl font-black">8+</div>
-            <div className="text-white/50 text-sm mt-1">Desarrollos propios</div>
-          </div>
-          <div>
-            <div className="text-4xl font-black">6</div>
-            <div className="text-white/50 text-sm mt-1">Clientes y prospectos</div>
-          </div>
-          <div>
-            <div className="text-4xl font-black">35+</div>
-            <div className="text-white/50 text-sm mt-1">Skills IA orquestadas</div>
-          </div>
-          <div>
-            <div className="text-4xl font-black">100%</div>
-            <div className="text-white/50 text-sm mt-1">AI First</div>
-          </div>
-        </div>
-      </section>
+      <section className="landing-stats" aria-label="Indicadores RR Aliados"><div><strong>{DEVELOPMENTS.length}+</strong><span>desarrollos activos</span></div><div><strong>{CLIENTS.length}</strong><span>clientes y prospectos</span></div><div><strong>35+</strong><span>skills orquestadas</span></div><div><strong>100%</strong><span>AI First</span></div></section>
 
-      {/* Desarrollos */}
-      <section id="desarrollos" className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-4">Desarrollos</h2>
-          <p className="text-white/60 mb-12 max-w-2xl">
-            Herramientas que construimos para operar mejor: dashboards, CRMs, cotizadores,
-            captura de leads y plataformas verticales.
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {DEVELOPMENTS.map((dev) => (
-              <a
-                key={dev.id}
-                href={dev.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group border border-white/10 rounded-lg p-6 hover:border-white/30 transition bg-white/[0.02]"
-              >
-                <div className="text-3xl mb-4">{dev.icon}</div>
-                <h3 className="text-xl font-bold mb-2 group-hover:text-white transition">{dev.title}</h3>
-                <p className="text-white/50 text-sm mb-4">{dev.description}</p>
-                <div className="flex flex-wrap gap-2">
-                  {dev.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-2 py-1 bg-white/5 rounded text-white/40">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section id="desarrollos" className="landing-section"><div className="section-intro"><p className="eyebrow">01 / ECOSISTEMA</p><h2>Lo que construimos<br /><span>para operar mejor.</span></h2><p>Productos internos, prototipos y sistemas que convierten estrategia en operación.</p></div><div className="development-grid">{DEVELOPMENTS.map(([title, description, url, number]) => <a key={title} href={url} target="_blank" rel="noreferrer" className="development-card"><span className="card-index">{number}</span><h3>{title} <span>↗</span></h3><p>{description}</p><small>ABRIR DESARROLLO</small></a>)}</div></section>
 
-      {/* Clientes */}
-      <section id="clientes" className="py-20 px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-4">Clientes y prospectos</h2>
-          <p className="text-white/60 mb-12 max-w-2xl">
-            Trabajamos con negocios que quieren crecer con estrategia y tecnología.
-            Estos son algunos de los proyectos en los que estamos activos.
-          </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CLIENTS.map((client) => (
-              <div
-                key={client.name}
-                className="border border-white/10 rounded-lg p-6 hover:border-white/30 transition bg-white/[0.02]"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <h3 className="text-xl font-bold">{client.name}</h3>
-                  <span className={`text-xs px-2 py-1 rounded ${
-                    client.status === "Cliente activo"
-                      ? "bg-green-500/20 text-green-400"
-                      : client.status === "Prospecto"
-                      ? "bg-yellow-500/20 text-yellow-400"
-                      : "bg-blue-500/20 text-blue-400"
-                  }`}>
-                    {client.status}
-                  </span>
-                </div>
-                <p className="text-white/50 text-sm mb-4">{client.industry}</p>
-                {client.url && (
-                  <a
-                    href={client.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/70 hover:text-white transition underline underline-offset-4"
-                  >
-                    Ver proyecto →
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <section id="clientes" className="landing-section landing-section--alt"><div className="section-intro"><p className="eyebrow">02 / ALIANZAS</p><h2>Marcas con<br /><span>algo que decir.</span></h2><p>Una vista pública del trabajo y las oportunidades que estamos construyendo.</p></div><div className="client-grid">{CLIENTS.map((client) => <article key={client.slug} className="client-row"><span className="client-status">{statusLabel[client.status]}</span><h3>{client.name}</h3><p>{client.industry}</p>{client.prototypeUrl || client.website ? <a href={client.prototypeUrl || client.website} target="_blank" rel="noreferrer" aria-label={`Ver proyecto ${client.name}`}>↗</a> : <span className="client-pending">FICHA EN CONSTRUCCIÓN</span>}</article>)}</div></section>
 
-      {/* Método */}
-      <section id="metodo" className="py-20 px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-black mb-12">Nuestro método</h2>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div>
-              <div className="text-5xl font-black text-white/10 mb-4">01</div>
-              <h3 className="text-xl font-bold mb-3">Estrategia brutal</h3>
-              <p className="text-white/50">
-                No vendemos humo. Analizamos tu negocio, tu mercado y tu competencia
-                antes de proponer cualquier cosa. Si no podemos ayudarte, te lo decimos.
-              </p>
-            </div>
-            <div>
-              <div className="text-5xl font-black text-white/10 mb-4">02</div>
-              <h3 className="text-xl font-bold mb-3">AI First</h3>
-              <p className="text-white/50">
-                Usamos inteligencia artificial en todo: desde la estrategia hasta la ejecución.
-                35+ skills propias que nos permiten entregar más rápido y con mejor calidad.
-              </p>
-            </div>
-            <div>
-              <div className="text-5xl font-black text-white/10 mb-4">03</div>
-              <h3 className="text-xl font-bold mb-3">Resultados medibles</h3>
-              <p className="text-white/50">
-                Todo lo que hacemos se mide. Dashboards en tiempo real, reportes IA,
-                y métricas claras para que sepas exactamente qué está pasando.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section id="metodo" className="landing-section method-section"><p className="eyebrow">03 / FORMA DE TRABAJO</p><h2>Vanguardia como<br /><span>ventaja operativa.</span></h2><div className="method-grid"><div><b>01</b><h3>Inmersión total</h3><p>Conocemos tus números, cuellos de botella y ambición antes de proponer.</p></div><div><b>02</b><h3>AI First</h3><p>La inteligencia artificial acelera la ejecución; el criterio humano decide el rumbo.</p></div><div><b>03</b><h3>Resultados medibles</h3><p>Métricas abiertas, decisiones claras y operación visible.</p></div></div></section>
 
-      {/* CTA */}
-      <section className="py-20 px-6 border-t border-white/10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl font-black mb-6">¿Quieres crecer con nosotros?</h2>
-          <p className="text-white/60 mb-8">
-            Agenda una llamada de descubrimiento. Analizamos tu caso y te decimos
-            si podemos ayudarte y cómo.
-          </p>
-          <a
-            href="mailto:rraliadosteam@gmail.com"
-            className="inline-block px-8 py-4 bg-white text-black font-bold rounded hover:bg-white/90 transition"
-          >
-            Agendar llamada
-          </a>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-white/40 text-sm">
-            © 2026 RR ALIADOS S.A.S. — Envigado, Colombia
-          </div>
-          <div className="flex items-center gap-6 text-sm text-white/40">
-            <a href="mailto:rraliadosteam@gmail.com" className="hover:text-white transition">
-              rraliadosteam@gmail.com
-            </a>
-            <Link href="/login" className="hover:text-white transition">
-              Acceso interno
-            </Link>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <section id="contacto" className="landing-cta"><img src="/brand/rr/simbolo_transparent_blanco.png" alt="" className="cta-symbol" /><p className="eyebrow">[ INITIATING_ALLIANCE ]</p><h2>¿Crecemos juntos?</h2><a href="mailto:rraliadosteam@gmail.com" className="brand-button brand-button--mustard">Agendar conversación ↗</a></section>
+      <footer className="landing-footer"><span>© 2026 RR ALIADOS S.A.S. — Envigado, Colombia</span><span>CON LAS MANOS EN EL FUEGO.</span><Link href="/login">Acceso interno ↗</Link></footer>
+    </main>
   );
 }

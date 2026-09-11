@@ -1,10 +1,21 @@
 # RR ALIADOS — Mega Dashboard
 
-Centro de comando interno de RR ALIADOS S.A.S. — Brutalismo Estratégico Colombiano.
+Landing pública + centro de comando interno de RR ALIADOS S.A.S. — B.U.C.M. (Brutalismo Urbano Cyberpunk Místico).
 
 **Producción:** https://rr-aliados-mega-dashboard.vercel.app/
 
 ---
+
+## Arquitectura pública / privada
+
+| URL | Uso | Acceso |
+|-----|-----|--------|
+| `/` | Landing pública: marca, desarrollos, clientes y método | Público |
+| `/login` | Entrada segura | Clave |
+| `/ops` | Centro de comando interno | Ops |
+| `/ops/clientes/[slug]` | Espacio operativo por cliente | Ops |
+
+La landing canónica vive aquí. El repositorio histórico `DEADKISS0/rr-web-corporativa` quedó archivado para evitar dos sitios corporativos compitiendo entre sí.
 
 ## ¿Qué es?
 
@@ -21,7 +32,8 @@ El Mega Dashboard es el centro de comando centralizado de RR ALIADOS. Unifica en
 
 | URL | Uso |
 |-----|-----|
-| `https://rr-aliados-mega-dashboard.vercel.app/` | Producción — acceso público (modo Elevator) |
+| `https://rr-aliados-mega-dashboard.vercel.app/` | Producción — landing pública |
+| `https://rr-aliados-mega-dashboard.vercel.app/ops` | Producción — operación privada |
 | `http://localhost:3000/` | Desarrollo local |
 
 ### Credenciales
@@ -34,18 +46,18 @@ El Mega Dashboard es el centro de comando centralizado de RR ALIADOS. Unifica en
 
 Las contraseñas de acceso se configuran mediante variables de entorno en Vercel (`AUTH_OPS_PASSWORD`, `AUTH_PITCH_PASSWORD`, `AUTH_CLIENT_PASSWORD`).
 
-## Dos modos de visualización
+## Dos superficies de producto
 
-### Modo Elevator (público)
+### Landing pública
 
-- Tema claro (warm parchment)
-- Muestra showcase, reportes públicos, catálogo de skills
-- Oculta datos financieros internos, pipeline, costos de equipo
-- Ideal para clientes potenciales, inversores, reclutamiento
+- Brandkit RR aplicado: negro `#070001`, fucsia `#BE076D`, mostaza `#DED116`, orquídea `#973D8F` y blanco cálido `#FFFFF3`
+- Muestra desarrollos, todos los clientes/prospectos registrados y método
+- Usa el símbolo oficial desde `public/brand/rr/`
+- No expone finanzas, pipeline ni reportes internos
 
-### Modo Partners (admin)
+### Centro de comando privado
 
-- Tema oscuro (pitch/void)
+- Mural operativo y espacios por cliente
 - Muestra todos los widgets con datos en vivo
 - Incluye pipeline comercial, costos, fechas clave, escenarios
 - Acceso por contraseña compartida (HMAC cookie)
@@ -54,7 +66,7 @@ Las contraseñas de acceso se configuran mediante variables de entorno en Vercel
 
 - **Framework:** Next.js 16 + React 19 + TypeScript
 - **Estilos:** Tailwind 4 + CSS custom properties (brandkit)
-- **Design tokens:** Pitch / Void / Ember / Parchment / Ash
+- **Design tokens:** Pitch / Void / Fucsia / Mostaza / Orquídea / Blanco cálido
 - **Fuentes:** Bebas Neue, Inter, IBM Plex Mono
 - **PWA:** Manifest JSON + Service Worker con cache-first
 - **Despliegue:** Vercel (producción + preview)
