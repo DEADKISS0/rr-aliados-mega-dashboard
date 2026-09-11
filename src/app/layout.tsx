@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { PresentationModeProvider } from "@/contexts/PresentationModeContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import "./globals.css";
+import "./landing.css";
 
 const inter = Inter({
   variable: "--font-inter",
