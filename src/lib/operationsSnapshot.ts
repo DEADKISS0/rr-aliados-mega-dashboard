@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { CLIENTS } from "@/data/clients";
-import { DEVELOPMENTS } from "@/data/developments";
+import { OPS_DEVELOPMENTS } from "@/data/developments";
 import { getBusinessContext, formatCop } from "@/data/businessContext";
 import { getDashWebTasks, type DashWebTask } from "@/lib/dashweb";
 import { getSupabaseServer } from "@/lib/finance/supabase";
@@ -70,5 +70,5 @@ export async function buildOperationsSnapshot(): Promise<OperationsSnapshot> {
   const critical = alerts.filter((alert) => alert.severity === "critical").length;
   const summary = critical ? `Hoy hay ${critical} alerta${critical === 1 ? " crítica" : "s críticas"}. Prioridad inmediata: ${topAction}.` : `Operación estable. Prioridad de hoy: ${topAction}. Hay ${openTasks.length} pendiente${openTasks.length === 1 ? "" : "s"} abierto${openTasks.length === 1 ? "" : "s"}.`;
   const liveSources = [sources.supabase === "live" ? "Supabase" : "", sources.dashweb === "live" ? "DashWeb" : ""].filter(Boolean);
-  return { generatedAt, sources, finance: { available, burn, runwayMonths, syncedAt: financial?.synced_at }, projects, tasks, cashMovements, syncRuns, alerts: alerts.slice(0, 6), counts: { clients: CLIENTS.length, activeClients: CLIENTS.filter((client) => client.status === "active").length, prospects: CLIENTS.filter((client) => client.status === "prospect").length, developments: DEVELOPMENTS.length, projects: projects.length, openTasks: openTasks.length, blockedTasks: blockedTasks.length }, summary: `${summary} Fuente: ${liveSources.length ? liveSources.join(" + ") : "directorio local"}. Caja: ${formatCop(available)} · burn: ${formatCop(burn)}/mes.` };
+  return { generatedAt, sources, finance: { available, burn, runwayMonths, syncedAt: financial?.synced_at }, projects, tasks, cashMovements, syncRuns, alerts: alerts.slice(0, 6), counts: { clients: CLIENTS.length, activeClients: CLIENTS.filter((client) => client.status === "active").length, prospects: CLIENTS.filter((client) => client.status === "prospect").length, developments: OPS_DEVELOPMENTS.length, projects: projects.length, openTasks: openTasks.length, blockedTasks: blockedTasks.length }, summary: `${summary} Fuente: ${liveSources.length ? liveSources.join(" + ") : "directorio local"}. Caja: ${formatCop(available)} · burn: ${formatCop(burn)}/mes.` };
 }
