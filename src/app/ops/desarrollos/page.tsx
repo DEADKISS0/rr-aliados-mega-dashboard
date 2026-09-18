@@ -7,12 +7,15 @@ const statusCopy: Record<OpsDevelopmentStatus, { label: string; className: strin
   core: { label: "Core interno", className: "border-emerald-300/30 bg-emerald-300/10 text-emerald-100", icon: ShieldCheck },
   consolidar: { label: "Consolidar", className: "border-[#DED116]/40 bg-[#DED116]/10 text-[#FFF6A3]", icon: RefreshCcw },
   soporte: { label: "Soporte", className: "border-sky-300/30 bg-sky-300/10 text-sky-100", icon: GitBranch },
+  archivo: { label: "Archivo", className: "border-white/20 bg-white/10 text-[#D2C7D0]", icon: Archive },
   retirar: { label: "Retirar / migrar", className: "border-[#E43A92]/40 bg-[#E43A92]/10 text-[#FFD6EA]", icon: Archive },
 };
 
 const counts = {
   core: OPS_DEVELOPMENTS.filter((item) => item.status === "core").length,
   consolidar: OPS_DEVELOPMENTS.filter((item) => item.status === "consolidar").length,
+  soporte: OPS_DEVELOPMENTS.filter((item) => item.status === "soporte").length,
+  archivo: OPS_DEVELOPMENTS.filter((item) => item.status === "archivo").length,
   retirar: OPS_DEVELOPMENTS.filter((item) => item.status === "retirar").length,
 };
 
@@ -28,7 +31,7 @@ export default function DesarrollosPage() {
         <header className="mb-8 flex flex-wrap items-start justify-between gap-6 border-b border-white/10 pb-6">
           <div>
             <Link href="/ops" className="mb-3 inline-block text-xs font-mono uppercase tracking-widest text-[#D2C7D0] hover:text-[#DED116]">← Centro interno</Link>
-            <p className="font-mono text-[11px] uppercase tracking-[.2em] text-[#DED116]">RR Aliados · Arquitectura interna</p>
+            <p className="font-mono text-[11px] uppercase tracking-[.2em] text-[#D2C7D0]">RR Aliados · Arquitectura interna</p>
             <h1 className="mt-2 text-4xl font-black uppercase tracking-tight md:text-6xl">Desarrollos</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-[#D2C7D0]">
               Registro único del apartado interno: qué se opera, qué se consolida y qué deja de vivir como herramienta activa.
@@ -48,10 +51,20 @@ export default function DesarrollosPage() {
             <strong className="mt-2 block text-4xl font-black">{counts.consolidar}</strong>
             <p className="mt-1 text-sm text-[#D2C7D0]">flujo que entra al Mega Dashboard.</p>
           </div>
+          <div className="rounded-2xl border border-sky-300/20 bg-sky-300/10 p-5">
+            <p className="font-mono text-[10px] uppercase tracking-[.2em] text-sky-100">Soporte</p>
+            <strong className="mt-2 block text-4xl font-black">{counts.soporte}</strong>
+            <p className="mt-1 text-sm text-[#D2C7D0]">infraestructura o apps por auditar.</p>
+          </div>
+          <div className="rounded-2xl border border-white/15 bg-white/[.045] p-5">
+            <p className="font-mono text-[10px] uppercase tracking-[.2em] text-[#D2C7D0]">Archivo</p>
+            <strong className="mt-2 block text-4xl font-black">{counts.archivo}</strong>
+            <p className="mt-1 text-sm text-[#D2C7D0]">artefactos que no son operación diaria.</p>
+          </div>
           <div className="rounded-2xl border border-[#E43A92]/25 bg-[#E43A92]/10 p-5">
             <p className="font-mono text-[10px] uppercase tracking-[.2em] text-[#FFD6EA]">Limpiar</p>
-            <strong className="mt-2 block text-4xl font-black">{counts.retirar + REMOVED_FROM_INTERNAL.length}</strong>
-            <p className="mt-1 text-sm text-[#D2C7D0]">duplicados o herramientas fuera del interno.</p>
+            <strong className="mt-2 block text-4xl font-black">{counts.retirar}</strong>
+            <p className="mt-1 text-sm text-[#D2C7D0]">duplicados fuera del flujo activo.</p>
           </div>
         </section>
 
